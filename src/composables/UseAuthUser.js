@@ -23,8 +23,8 @@ export default function useAuthUser () {
 
   const register = async ({ email, password, ...meta }) => {
     const { user, error } = await supabase.auth.signUp({ email, password }, {
-        data: meta,
-        redirectTo: `${window.location.origin}/me?fromEmail=registrationConfirmation`
+      data: meta,
+      redirectTo: `${window.location.origin}/me?fromEmail=registrationConfirmation`
     })
     if (error) throw error
     return user
@@ -36,7 +36,7 @@ export default function useAuthUser () {
     return user
   }
 
-  const sendPasswordRestEmail = async () => {
+  const sendPasswordRestEmail = async (data) => {
     const { user, error } = await supabase.auth.api.resetPasswordForEmail(data)
     if (error) throw error
     return user
@@ -45,7 +45,6 @@ export default function useAuthUser () {
   return {
     user,
     login,
-    loginWithSocialProvider,
     logout,
     isLoggedIn,
     register,
