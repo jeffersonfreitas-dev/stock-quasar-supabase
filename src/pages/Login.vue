@@ -8,8 +8,9 @@
         <div class="full-width q-pt-md">
           <q-btn label="Login" color="primary" class="full-width" rounded outline type="submit"/>
         </div>
-        <div class="full-width">
-          <q-btn label="Register" color="primary" class="full-width" flat to="/register"/>
+        <div class="full-width q-gutter-y-sm">
+          <q-btn label="Register" color="primary" class="full-width" size="sm" flat to="/register"/>
+          <q-btn label="Forgot Password" color="primary" class="full-width" size="sm" flat :to="{ name: 'forgot-password' }" />
         </div>
       </div>
     </q-form>

@@ -10,7 +10,7 @@
           <q-btn label="Register" color="primary" class="full-width" rounded outline type="submit"/>
         </div>
         <div class="full-width">
-          <q-btn label="Login" color="primary" class="full-width" flat to="/login"/>
+          <q-btn label="Back" color="primary" class="full-width" flat to="/login"/>
         </div>
       </div>
     </q-form>
