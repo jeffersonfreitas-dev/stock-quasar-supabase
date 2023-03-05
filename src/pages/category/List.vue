@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <div class="row">
-      <q-table :rows="categories" :columns="columns" row-key="id" class="col-12">
+      <q-table :rows="categories" :columns="columns" row-key="id" class="col-12" :loading="loading">
         <template v-slot:top>
           <span class="text-h6">Category</span>
           <q-space />
@@ -42,10 +42,13 @@ export default defineComponent({
     const { list } = useApi()
     const { notifyError } = useNotify()
     const categories = ref([])
+    const loading = ref(true)
 
     const handleListCategories = async () => {
       try {
+        loading.value = true
         categories.value = await list('category')
+        loading.value = false
       } catch (error) {
         notifyError(error.message)
       }
@@ -57,7 +60,8 @@ export default defineComponent({
 
     return {
       columns,
-      categories
+      categories,
+      loading
     }
   }
 })
