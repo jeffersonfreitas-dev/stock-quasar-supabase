@@ -1,11 +1,19 @@
 <template>
   <q-page padding>
     <div class="row">
-      <q-table :rows="categories" :columns="columnsCategory" row-key="id" class="col-12" :loading="loading">
+      <q-table :rows="products" :columns="columnsProduct" row-key="id" class="col-12" :loading="loading">
         <template v-slot:top>
-          <span class="text-h6">Category</span>
+          <span class="text-h6">Product</span>
           <q-space />
-          <q-btn label="Add New" color="primary" icon="mdi-plus" dense :to="{ name: 'form-category' }" v-if="$q.platform.is.desktop"/>
+          <q-btn label="Add New" color="primary" icon="mdi-plus" dense :to="{ name: 'form-product' }" v-if="$q.platform.is.desktop"/>
+        </template>
+        <template v-slot:body-cell-img_url="props">
+          <q-td :props="props">
+            <q-avatar v-if="props.row.img_url">
+              <img :src="props.row.img_url" />
+            </q-avatar>
+            <q-avatar v-else color="primary" text-color="white" icon="mdi-image-off" />
+          </q-td>
         </template>
         <template v-slot:body-cell-actions="props">
           <q-td :props="props" class="q-gutter-x-sm">
@@ -24,7 +32,7 @@
       </q-table>
     </div>
     <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="$q.platform.is.mobile">
-      <q-btn fab icon="mdi-plus" color="primary" :to="{ name: 'form-category' }"/>
+      <q-btn fab icon="mdi-plus" color="primary" :to="{ name: 'form-product' }"/>
     </q-page-sticky>
   </q-page>
 </template>
@@ -35,57 +43,57 @@ import { useRouter } from 'vue-router'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import { useQuasar } from 'quasar'
-import { columnsCategory } from './table'
+import { columnsProduct } from './table'
 
 export default defineComponent({
-  name: 'PageCategoryList',
+  name: 'PageProductList',
   setup () {
     const { list, remove } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const router = useRouter()
-    const categories = ref([])
+    const products = ref([])
     const loading = ref(true)
-    const table = 'category'
+    const table = 'product'
     const $q = useQuasar()
 
-    const handleListCategories = async () => {
+    const handleListProducts = async () => {
       try {
         loading.value = true
-        categories.value = await list(table)
+        products.value = await list(table)
         loading.value = false
       } catch (error) {
         notifyError(error.message)
       }
     }
 
-    const handleRemove = async (category) => {
+    const handleRemove = async (product) => {
       try {
         $q.dialog({
           title: 'Confirm',
-          message: `Do you really delete ${category.name} ?`,
+          message: `Do you really delete ${product.name} ?`,
           cancel: true,
           persistent: true
         }).onOk(async () => {
-          await remove(table, category.id)
-          notifySuccess(`${category.name} removed successfully`)
-          handleListCategories()
+          await remove(table, product.id)
+          notifySuccess(`${product.name} removed successfully`)
+          handleListProducts()
         })
       } catch (error) {
         notifyError(error.message)
       }
     }
 
-    const handleEdit = (category) => {
-      router.push({ name: 'form-category', params: { id: category.id } })
+    const handleEdit = (product) => {
+      router.push({ name: 'form-product', params: { id: product.id } })
     }
 
     onMounted(() => {
-      handleListCategories()
+      handleListProducts()
     })
 
     return {
-      columnsCategory,
-      categories,
+      columnsProduct,
+      products,
       loading,
       handleEdit,
       handleRemove
