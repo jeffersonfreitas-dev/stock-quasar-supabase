@@ -7,13 +7,51 @@
         </p>
       </div>
       <q-form class="col-md-7 col-xs-12 col-sm-12 q-gutter-y-md" @submit.prevent="handleSubmit">
-        <q-input label="Name" v-model="form.name" :rules="[val => (val && val.length > 0) || 'Name is required']"/>
-        <q-editor label="Description" min-height="5rem" v-model="form.description"/>
-        <q-input label="Amount" type="number" v-model="form.amount" :rules="[val => (val && val.length > 0) || 'Amount is required']"/>
-        <q-input label="Price" v-model="form.price" :rules="[val => (val && val.length > 0) || 'Price is required']" prefix="R$"/>
-        <q-select v-model="form.category_id" :options="optionsCategory" label="Category" option-value="id" option-label="name" map-options emit-value />
-        <q-btn :label="isUpdate ? 'Update' : 'Save'" color="primary" class="full-width" rounded type="submit"/>
-        <q-btn label="Cancel" color="primary" class="full-width" rounded flat :to="{ name: 'product' }"/>
+        <q-input
+          label="Name"
+          v-model="form.name"
+          :rules="[val => (val && val.length > 0) || 'Name is required']"
+        />
+        <q-editor
+          label="Description"
+          min-height="5rem"
+          v-model="form.description"
+        />
+        <q-input
+          label="Amount"
+          type="number"
+          v-model="form.amount"
+          :rules="[val => !!val || 'Amount is required']"
+        />
+        <q-input
+          label="Price"
+          v-model="form.price"
+          :rules="[val => !!val || 'Price is required']"
+          prefix="R$"
+        />
+        <q-select
+          v-model="form.category_id"
+          :options="optionsCategory"
+          label="Category"
+          option-value="id"
+          option-label="name"
+          map-options
+          emit-value
+          :rules="[val => !!val || 'Category is required']"
+        />
+        <q-btn
+          :label="isUpdate ? 'Update' : 'Save'"
+          color="primary" class="full-width"
+          rounded type="submit"
+        />
+        <q-btn
+          label="Cancel"
+          color="primary"
+          class="full-width"
+          rounded
+          flat
+          :to="{ name: 'product' }"
+        />
       </q-form>
     </div>
 
