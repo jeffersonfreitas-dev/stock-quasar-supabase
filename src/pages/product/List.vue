@@ -4,6 +4,16 @@
       <q-table :rows="products" :columns="columnsProduct" row-key="id" class="col-12" :loading="loading">
         <template v-slot:top>
           <span class="text-h6">Product</span>
+          <q-btn
+            label="My Store"
+            dense
+            size="sm"
+            outline
+            class="q-ml-sm"
+            icon="mdi-store"
+            color="primary"
+            @click="handleGoToStore"
+          />
           <q-space />
           <q-btn label="Add New" color="primary" icon="mdi-plus" dense :to="{ name: 'form-product' }" v-if="$q.platform.is.desktop"/>
         </template>
@@ -44,26 +54,33 @@ import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import { useQuasar } from 'quasar'
 import { columnsProduct } from './table'
+import useAuthUser from 'src/composables/UseAuthUser'
 
 export default defineComponent({
   name: 'PageProductList',
   setup () {
-    const { list, remove } = useApi()
+    const { listPublic, remove } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const router = useRouter()
     const products = ref([])
     const loading = ref(true)
     const table = 'product'
     const $q = useQuasar()
+    const { user } = useAuthUser()
 
     const handleListProducts = async () => {
       try {
         loading.value = true
-        products.value = await list(table)
+        products.value = await listPublic(table, user.value.id)
         loading.value = false
       } catch (error) {
         notifyError(error.message)
       }
+    }
+
+    const handleGoToStore = () => {
+      const idUser = user.value.id
+      router.push({ name: 'product-public', params: { id: idUser } })
     }
 
     const handleRemove = async (product) => {
@@ -96,7 +113,8 @@ export default defineComponent({
       products,
       loading,
       handleEdit,
-      handleRemove
+      handleRemove,
+      handleGoToStore
     }
   }
 })

@@ -12,6 +12,12 @@ export default function () {
     return data
   }
 
+  const listPublic = async (table, userId) => {
+    const { data, error } = await supabase.from(table).select('*').eq('user_id', userId)
+    if (error) throw error
+    return data
+  }
+
   const getById = async (table, id) => {
     const { data, error } = await supabase.from(table).select('*').eq('id', id)
     if (error) throw error
@@ -52,6 +58,7 @@ export default function () {
 
   return {
     list,
+    listPublic,
     getById,
     create,
     update,
