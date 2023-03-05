@@ -4,7 +4,7 @@ import useAuthUser from './UseAuthUser'
 export default function () {
   const supabase = useSupabase()
   const { user } = useAuthUser()
-  
+
   const list = async (table) => {
     const { data, error } = await supabase.from(table).select('*')
     if (error) throw error
