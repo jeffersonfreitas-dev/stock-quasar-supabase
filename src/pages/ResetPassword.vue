@@ -3,7 +3,7 @@
     <q-form class="row justify-center" @submit.prevent="handlePasswordReset">
       <p class="col-12 text-h5 text-center">Reset Password</p>
       <div class="col-md-4 col-sn-6 col-xs-10 q-gutter-y-md">
-        <q-input label="Password" v-model="password" lazy-rules :rules="[val => (val && val.length > 5) || 'Password is required and have to be greater than 5 characters']"/>
+        <q-input label="Password" type="password" v-model="password" lazy-rules :rules="[val => (val && val.length > 5) || 'Password is required and have to be greater than 5 characters']"/>
         <div class="full-width q-pt-md">
           <q-btn label="Send New Password" color="primary" class="full-width" rounded outline type="submit"/>
         </div>
