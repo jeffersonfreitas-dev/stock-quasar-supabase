@@ -5,11 +5,11 @@
         <template v-slot:top>
           <span class="text-h6">Category</span>
           <q-space />
-          <q-btn label="Add New" color="primary"/>
+          <q-btn label="Add New" color="primary" icon="mdi-plus" dense :to="{ name: 'form-category' }"/>
         </template>
         <template v-slot:body-cell-actions="props">
           <q-td :props="props" class="q-gutter-x-sm">
-            <q-btn icon="mdi-pencil-outline" color="info" dense size="sm">
+            <q-btn icon="mdi-pencil-outline" color="info" dense size="sm" @click="handleEdit(props.row)">
               <q-tooltip>
                 Edit
               </q-tooltip>
@@ -28,6 +28,7 @@
 
 <script>
 import { defineComponent, ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 
@@ -41,6 +42,7 @@ export default defineComponent({
   setup () {
     const { list } = useApi()
     const { notifyError } = useNotify()
+    const router = useRouter()
     const categories = ref([])
     const loading = ref(true)
 
@@ -54,6 +56,10 @@ export default defineComponent({
       }
     }
 
+    const handleEdit = (category) => {
+      router.push({ name: 'form-category', params: { id: category.id } })
+    }
+
     onMounted(() => {
       handleListCategories()
     })
@@ -61,7 +67,8 @@ export default defineComponent({
     return {
       columns,
       categories,
-      loading
+      loading,
+      handleEdit
     }
   }
 })
