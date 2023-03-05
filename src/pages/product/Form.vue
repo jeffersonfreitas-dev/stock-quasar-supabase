@@ -8,6 +8,14 @@
       </div>
       <q-form class="col-md-7 col-xs-12 col-sm-12 q-gutter-y-md" @submit.prevent="handleSubmit">
         <q-input
+          label="Image"
+          stack-label
+          v-model="img"
+          type="file"
+          accept="image/*"
+        />
+
+        <q-input
           label="Name"
           v-model="form.name"
           :rules="[val => (val && val.length > 0) || 'Name is required']"
@@ -70,16 +78,18 @@ export default defineComponent({
     const table = 'product'
     const router = useRouter()
     const route = useRoute()
-    const { create, getById, update, list } = useApi()
+    const { create, getById, update, list, uploadImg } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     let product = {}
     const optionsCategory = ref([])
+    const img = ref([])
     const form = ref({
       name: '',
       description: '',
       amount: 0,
       price: 0,
-      category_id: ''
+      category_id: '',
+      img_url: ''
     })
 
     const isUpdate = computed(() => route.params.id)
@@ -92,6 +102,11 @@ export default defineComponent({
 
     const handleSubmit = async () => {
       try {
+        if (img.value.length > 0) {
+          console.log(img.value)
+          const imgUrl = await uploadImg(img.value[0], 'product')
+          form.value.img_url = imgUrl
+        }
         if (isUpdate.value) {
           await update(table, { ...form.value })
           notifySuccess(`${form.value.name} updated successfully`)
@@ -122,7 +137,8 @@ export default defineComponent({
       form,
       handleSubmit,
       isUpdate,
-      optionsCategory
+      optionsCategory,
+      img
     }
   }
 })
