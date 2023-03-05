@@ -14,7 +14,7 @@
                 Edit
               </q-tooltip>
             </q-btn>
-            <q-btn icon="mdi-delete-outline" color="negative" dense size="sm">
+            <q-btn icon="mdi-delete-outline" color="negative" dense size="sm" @click="handleRemove(props.row)">
               <q-tooltip>
                 Delete
               </q-tooltip>
@@ -31,6 +31,7 @@ import { defineComponent, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
+import { useQuasar } from 'quasar'
 
 const columns = [
   { name: 'name', align: 'left', label: 'Name', field: 'name', sortable: true },
@@ -40,17 +41,36 @@ const columns = [
 export default defineComponent({
   name: 'PageCategoryList',
   setup () {
-    const { list } = useApi()
-    const { notifyError } = useNotify()
+    const { list, remove } = useApi()
+    const { notifyError, notifySuccess } = useNotify()
     const router = useRouter()
     const categories = ref([])
     const loading = ref(true)
+    const table = 'category'
+    const $q = useQuasar()
 
     const handleListCategories = async () => {
       try {
         loading.value = true
-        categories.value = await list('category')
+        categories.value = await list(table)
         loading.value = false
+      } catch (error) {
+        notifyError(error.message)
+      }
+    }
+
+    const handleRemove = async (category) => {
+      try {
+        $q.dialog({
+          title: 'Confirm',
+          message: `Do you really delete ${category.name} ?`,
+          cancel: true,
+          persistent: true
+        }).onOk(async () => {
+          await remove(table, category.id)
+          notifySuccess(`${category.name} removed successfully`)
+          handleListCategories()
+        })
       } catch (error) {
         notifyError(error.message)
       }
@@ -68,7 +88,8 @@ export default defineComponent({
       columns,
       categories,
       loading,
-      handleEdit
+      handleEdit,
+      handleRemove
     }
   }
 })
