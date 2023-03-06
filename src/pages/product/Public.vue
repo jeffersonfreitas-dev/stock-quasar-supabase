@@ -49,6 +49,11 @@
         </template>
       </q-table>
     </div>
+    <dialog-product-details
+      :show="showDialogDetails"
+      :product="productDetails"
+      @hide-dialog="showDialogDetails = false"
+    />
   </q-page>
 </template>
 
@@ -59,9 +64,13 @@ import useNotify from 'src/composables/UseNotify'
 import { columnsProduct } from './table'
 import { useRoute } from 'vue-router'
 import { formatCurrency } from 'src/utils/format'
+import DialogProductDetails from 'src/components/DialogProductDetails.vue'
 
 export default defineComponent({
   name: 'PageProductPublic',
+  components: {
+    DialogProductDetails
+  },
   setup () {
     const { listPublic } = useApi()
     const { notifyError } = useNotify()
@@ -70,6 +79,8 @@ export default defineComponent({
     const table = 'product'
     const route = useRoute()
     const filter = ref('')
+    const showDialogDetails = ref(false)
+    const productDetails = ref({})
 
     const handleListProducts = async (userId) => {
       try {
@@ -79,6 +90,11 @@ export default defineComponent({
       } catch (error) {
         notifyError(error.message)
       }
+    }
+
+    const handleShowDetails = (product) => {
+      productDetails.value = product
+      showDialogDetails.value = true
     }
 
     onMounted(() => {
@@ -92,7 +108,10 @@ export default defineComponent({
       products,
       loading,
       formatCurrency,
-      filter
+      filter,
+      showDialogDetails,
+      productDetails,
+      handleShowDetails
     }
   }
 })
