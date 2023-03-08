@@ -3,7 +3,7 @@
     <q-header elevated>
       <q-toolbar>
         <q-toolbar-title>
-          Quasar App
+          {{ brand.name }}
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -21,12 +21,12 @@ export default defineComponent({
   name: 'LoginLayout',
 
   setup () {
-    const { getBrand } = UseApi()
+    const { getBrand, brand } = UseApi()
     onMounted(() => {
       getBrand()
     })
     return {
-
+      brand
     }
   }
 })

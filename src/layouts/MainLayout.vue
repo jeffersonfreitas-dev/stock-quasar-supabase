@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Stock
+          {{ brand.name }}
         </q-toolbar-title>
 
         <q-btn-dropdown flat color="white" icon="person">
@@ -100,7 +100,7 @@ export default defineComponent({
     const router = useRouter()
     const { logout } = useAuthUser()
     const $q = useQuasar()
-    const { getBrand } = useApi()
+    const { getBrand, brand } = useApi()
 
     onMounted(() => {
       getBrand()
@@ -117,6 +117,7 @@ export default defineComponent({
     return {
       essentialLinks: linksList,
       leftDrawerOpen,
+      brand,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
       },

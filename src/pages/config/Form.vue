@@ -38,6 +38,7 @@ import { useRouter } from 'vue-router'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import useBrand from 'src/composables/UseBrand'
+import useAuthUser from 'src/composables/UseAuthUser'
 
 export default defineComponent({
   name: 'PageFormConfig',
@@ -45,8 +46,9 @@ export default defineComponent({
     const table = 'config'
     const router = useRouter()
     const { setBrand } = useBrand()
-    const { create, list, update } = useApi()
+    const { create, listPublic, update } = useApi()
     const { notifyError, notifySuccess } = useNotify()
+    const { user } = useAuthUser()
     let config = {}
     const form = ref({
       name: '',
@@ -75,9 +77,9 @@ export default defineComponent({
       }
     }
 
-    const handleGetConfig = async (id) => {
+    const handleGetConfig = async () => {
       try {
-        config = await list(table)
+        config = await listPublic(table, user.value.id)
         form.value = config[0]
       } catch (error) {
         notifyError(error.message)

@@ -72,7 +72,7 @@ export default defineComponent({
     DialogProductDetails
   },
   setup () {
-    const { listPublic } = useApi()
+    const { listPublic, brand } = useApi()
     const { notifyError } = useNotify()
     const products = ref([])
     const loading = ref(true)
@@ -111,7 +111,8 @@ export default defineComponent({
       filter,
       showDialogDetails,
       productDetails,
-      handleShowDetails
+      handleShowDetails,
+      brand
     }
   }
 })

@@ -71,7 +71,7 @@ export default function () {
   }
 
   const getBrand = async () => {
-    const id = user?.value?.id || route.params.id
+    const id = route.params.id || user?.value?.id
     if (id) {
       $q.loading.show({
         backgroundColor: 'dark-10'
