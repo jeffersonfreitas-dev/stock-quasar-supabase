@@ -14,12 +14,17 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted } from 'vue'
+import UseApi from 'src/composables/UseApi'
 
 export default defineComponent({
   name: 'LoginLayout',
 
   setup () {
+    const { getBrand } = UseApi()
+    onMounted(() => {
+      getBrand()
+    })
     return {
 
     }
