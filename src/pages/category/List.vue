@@ -36,22 +36,24 @@ import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import { useQuasar } from 'quasar'
 import { columnsCategory } from './table'
+import useAuthUser from 'src/composables/UseAuthUser'
 
 export default defineComponent({
   name: 'PageCategoryList',
   setup () {
-    const { list, remove } = useApi()
+    const { listPublic, remove } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const router = useRouter()
     const categories = ref([])
     const loading = ref(true)
     const table = 'category'
     const $q = useQuasar()
+    const { user } = useAuthUser()
 
     const handleListCategories = async () => {
       try {
         loading.value = true
-        categories.value = await list(table)
+        categories.value = await listPublic(table, user.value.id)
         loading.value = false
       } catch (error) {
         notifyError(error.message)
