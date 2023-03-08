@@ -73,7 +73,9 @@ export default function () {
   const getBrand = async () => {
     const id = user?.value?.id || route.params.id
     if (id) {
-      $q.loading.show()
+      $q.loading.show({
+        backgroundColor: 'dark-10'
+      })
       const { data, error } = await supabase.from('config').select('*').eq('user_id', id)
       if (error) throw error
       if (data.length > 0) {
