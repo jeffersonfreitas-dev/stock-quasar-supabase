@@ -52,10 +52,10 @@
                 </q-card-section>
               </q-card>
             </div>
-            <div class="col-12" v-if="props.rowIndex === 3 && brand.paralax_url" key="paralax">
+            <div class="col-12" v-if="props.rowIndex === 3 && brand.img_paralax" key="paralax">
               <q-parallax :height="200" :speed="0.5">
                 <template v-slot:media>
-                  <img :src="brand.paralax_url">
+                  <img :src="brand.img_paralax">
                 </template>
 
                 <h3 class="text-white">{{ brand.name }}</h3>
@@ -154,7 +154,7 @@ export default defineComponent({
       route,
       initialPagination,
       handleScrollToTop,
-      pagesNumber: computed(() => Math.ceil(products.value.length / initialPagination.value.rowPerPage))
+      pagesNumber: computed(() => Math.ceil(products.value.length / initialPagination.value.rowsPerPage))
     }
   }
 })

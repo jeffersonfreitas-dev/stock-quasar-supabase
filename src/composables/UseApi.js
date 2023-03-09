@@ -10,7 +10,8 @@ const brand = ref({
   primary: '',
   secondary: '',
   name: '',
-  phone: ''
+  phone: '',
+  img_paralax: ''
 })
 
 export default function () {
