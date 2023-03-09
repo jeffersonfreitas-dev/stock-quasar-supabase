@@ -62,7 +62,7 @@ import { defineComponent, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
-import { useQuasar, openURL, copyToClipboard } from 'quasar'
+import { useQuasar, copyToClipboard } from 'quasar'
 import { columnsProduct } from './table'
 import useAuthUser from 'src/composables/UseAuthUser'
 
@@ -90,8 +90,7 @@ export default defineComponent({
 
     const handleGoToStore = () => {
       const idUser = user.value.id
-      const link = router.resolve({ name: 'product-public', params: { id: idUser } })
-      openURL(window.origin + link.href)
+      router.push({ name: 'product-public', params: { id: idUser } })
     }
 
     const handleCopyPublicLink = () => {
