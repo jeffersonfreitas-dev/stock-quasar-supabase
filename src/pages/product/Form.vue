@@ -71,6 +71,7 @@ import { defineComponent, ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
+import useAuthUser from 'src/composables/UseAuthUser'
 
 export default defineComponent({
   name: 'PageFormProduct',
@@ -78,8 +79,9 @@ export default defineComponent({
     const table = 'product'
     const router = useRouter()
     const route = useRoute()
-    const { create, getById, update, list, uploadImg } = useApi()
+    const { create, getById, update, listPublic, uploadImg } = useApi()
     const { notifyError, notifySuccess } = useNotify()
+    const { user } = useAuthUser()
     let product = {}
     const optionsCategory = ref([])
     const img = ref([])
@@ -121,7 +123,7 @@ export default defineComponent({
     }
 
     const handleListCategory = async () => {
-      optionsCategory.value = await list('category')
+      optionsCategory.value = await listPublic('category', user.value.id)
     }
 
     const handleGetProduct = async (id) => {
