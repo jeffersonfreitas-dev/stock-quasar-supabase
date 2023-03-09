@@ -168,11 +168,11 @@ module.exports = configure(function (ctx) {
       manifest: {
         name: 'Stock Quasar',
         short_name: 'Stock Quasar',
-        description: 'A stock quasar app with supabase',
+        description: 'App Stock fácil na palma da sua mão',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
-        theme_color: '#027be3',
+        theme_color: '#2c9c6a',
         icons: [
           {
             src: 'icons/icon-128x128.png',
