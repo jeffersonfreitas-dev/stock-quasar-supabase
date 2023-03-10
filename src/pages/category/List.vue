@@ -1,22 +1,46 @@
 <template>
   <q-page padding>
     <div class="row">
-      <q-table :rows="categories" :columns="columnsCategory" row-key="id" class="col-12" :loading="loading">
+      <q-table
+        :rows="categories"
+        :columns="columnsCategory"
+        row-key="id"
+        class="col-12"
+        :loading="loading"
+      >
         <template v-slot:top>
-          <span class="text-h6">Category</span>
+          <span class="text-h6">{{ $t('category') }}</span>
           <q-space />
-          <q-btn label="Add New" color="primary" icon="mdi-plus" dense :to="{ name: 'form-category' }" v-if="$q.platform.is.desktop"/>
+          <q-btn
+            :label="$t('btn_new')"
+            color="primary"
+            icon="mdi-plus"
+            dense
+            :to="{ name: 'form-category' }"
+            v-if="$q.platform.is.desktop"
+          />
         </template>
         <template v-slot:body-cell-actions="props">
           <q-td :props="props" class="q-gutter-x-sm">
-            <q-btn icon="mdi-pencil-outline" color="info" dense size="sm" @click="handleEdit(props.row)">
+            <q-btn
+              icon="mdi-pencil-outline"
+              color="info"
+              dense
+              size="sm"
+              @click="handleEdit(props.row)"
+            >
               <q-tooltip>
-                Edit
+                {{ $t('btn_edit') }}
               </q-tooltip>
             </q-btn>
-            <q-btn icon="mdi-delete-outline" color="negative" dense size="sm" @click="handleRemove(props.row)">
+            <q-btn
+              icon="mdi-delete-outline"
+              color="negative"
+              dense size="sm"
+              @click="handleRemove(props.row)"
+            >
               <q-tooltip>
-                Delete
+                {{ $t('btn_delete') }}
               </q-tooltip>
             </q-btn>
           </q-td>

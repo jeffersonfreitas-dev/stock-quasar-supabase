@@ -3,13 +3,29 @@
     <div class="row justify-center">
       <div class="col-12 text-center">
         <p class="text-h6">
-          Form Category
+          {{ $t('category') }}
         </p>
       </div>
       <q-form class="col-md-7 col-xs-12 col-sm-12 q-gutter-y-md" @submit.prevent="handleSubmit">
-        <q-input label="Name" v-model="form.name" :rules="[val => (val && val.length > 0) || 'Name is required']"/>
-        <q-btn :label="isUpdate ? 'Update' : 'Save'" color="primary" class="full-width" rounded type="submit"/>
-        <q-btn label="Cancel" color="primary" class="full-width" rounded flat :to="{ name: 'category' }"/>
+        <q-input
+          :label="$t('entity_name')"
+          v-model="form.name"
+          :rules="[val => (val && val.length > 0) || $t('required')]"
+        />
+        <q-btn
+          :label="isUpdate ? $t('btn_update') : $t('btn_save')"
+          color="primary"
+          class="full-width"
+          rounded type="submit"
+        />
+        <q-btn
+          :label="$t('btn_cancel')"
+          color="primary"
+          class="full-width"
+          rounded
+          flat
+          :to="{ name: 'category' }"
+        />
       </q-form>
     </div>
 
