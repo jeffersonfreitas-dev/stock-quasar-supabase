@@ -4,6 +4,7 @@
       <q-table
         :rows="categories"
         :columns="columnsCategory"
+        v-model:pagination="initialPagination"
         row-key="id"
         class="col-12 q-mb-md"
         :loading="loading"

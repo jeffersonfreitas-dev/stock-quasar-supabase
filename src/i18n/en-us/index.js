@@ -38,5 +38,6 @@ export default {
   btn_login: 'Login',
   login: 'Login',
   btn_register: 'Register',
-  btn_forgot_password: 'Forgot Password'
+  btn_forgot_password: 'Forgot Password',
+  make_wish: 'Make a Wish'
 }

@@ -19,10 +19,10 @@
         <div class="text-body2" v-html="product.description"></div>
       </q-card-section>
       <q-card-actions align="right">
-          <q-btn label="Cancel" color="primary" outline v-close-popup />
+          <q-btn :label="$t('btn_cancel')" color="primary" outline v-close-popup />
           <q-btn
             v-if="brand.phone"
-            label="Fazer Pedido"
+            :label="$t('make_wish')"
             icon="mdi-whatsapp"
             color="green-7"
             @click="handleSendWpp"

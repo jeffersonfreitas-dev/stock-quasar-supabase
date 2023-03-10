@@ -1,9 +1,17 @@
 <template>
   <q-page padding>
     <div class="row">
-      <q-table :rows="products" :columns="columnsProduct" row-key="id" class="col-12 q-mb-md" :loading="loading" hide-pagination>
+      <q-table
+        :rows="products"
+        :columns="columnsProduct"
+        row-key="id"
+        class="col-12 q-mb-md"
+        v-model:pagination="initialPagination"
+        :loading="loading"
+        hide-pagination
+      >
         <template v-slot:top>
-          <span class="text-h6">Product</span>
+          <span class="text-h6">{{ $t('product') }}</span>
           <q-btn
             :label="$t('my_store')"
             dense

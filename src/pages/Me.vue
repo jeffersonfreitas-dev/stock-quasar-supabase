@@ -1,13 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <div v-if="user">
-      <p>Hello {{ user.user_metadata.name }}</p>
-      <q-btn label="English" @click="$i18n.locale='en-us'" />
-      <q-btn label="Portugues" @click="$i18n.locale='pt-BR'" />
-      <q-separator class="q-my-lg" />
-
-      <q-btn :label="$t('failed')"/>
-      <q-btn :label="$t('success')"/>
+      <p>Seja bem-vindo(a) {{ user.user_metadata.name }}</p>
     </div>
   </q-page>
 </template>

@@ -38,5 +38,6 @@ export default {
   btn_login: 'Entrar',
   login: 'Entrar',
   btn_register: 'Cadastre-se',
-  btn_forgot_password: 'Recuperar a senha'
+  btn_forgot_password: 'Recuperar a senha',
+  make_wish: 'Fazer pedido'
 }
