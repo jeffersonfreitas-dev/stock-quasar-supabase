@@ -12,14 +12,14 @@
         />
 
         <q-toolbar-title>
-          {{ brand.name }}
+          {{ brand.name || 'Stock'}}
         </q-toolbar-title>
 
         <q-btn-dropdown flat color="white" icon="person">
           <q-list>
             <q-item clickable v-close-popup @click="handleLogout">
               <q-item-section>
-                <q-item-label>Logout</q-item-label>
+                <q-item-label>Sair</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -36,7 +36,7 @@
         <q-item-label
           header
         >
-          Options
+          Menu
         </q-item-label>
 
         <EssentialLink
@@ -63,25 +63,25 @@ import useApi from 'src/composables/UseApi'
 
 const linksList = [
   {
-    title: 'Home',
+    title: 'Dashboard',
     caption: '',
     icon: 'mdi-home',
     routeName: 'me'
   },
   {
-    title: 'Category',
+    title: 'Categorias',
     caption: '',
     icon: 'mdi-shape-outline',
     routeName: 'category'
   },
   {
-    title: 'Product',
+    title: 'Produtos',
     caption: '',
     icon: 'mdi-archive',
     routeName: 'product'
   },
   {
-    title: 'Config',
+    title: 'Configurações',
     caption: '',
     icon: 'mdi-cog',
     routeName: 'form-config'
@@ -107,7 +107,7 @@ export default defineComponent({
     })
 
     const handleLogout = async () => {
-      $q.dialog({ title: 'Logout', message: 'Do you really want to leave ?', cancel: true, persistent: true })
+      $q.dialog({ title: 'Sair', message: 'Deseja realmente sair?', cancel: true, persistent: true })
         .onOk(async () => {
           await logout()
           router.replace({ name: 'login' })

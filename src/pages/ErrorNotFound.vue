@@ -1,21 +1,22 @@
 <template>
-  <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
+  <div class="fullscreen bg-primary text-white text-center q-pa-md flex flex-center">
     <div>
       <div style="font-size: 30vh">
         404
       </div>
 
       <div class="text-h2" style="opacity:.4">
-        Oops. Nothing here...
+        {{ $t('error_404') }}
       </div>
 
       <q-btn
         class="q-mt-xl"
         color="white"
-        text-color="blue"
+        rounded
+        text-color="primary"
         unelevated
-        to="/"
-        label="Go Home"
+        :to="{ name: 'me' }"
+        :label="$t('btn_back_home')"
         no-caps
       />
     </div>

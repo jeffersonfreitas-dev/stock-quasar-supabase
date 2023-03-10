@@ -3,25 +3,25 @@
     <div class="row justify-center">
       <div class="col-12 text-center">
         <p class="text-h6">
-          Form Config
+          {{ $t('config') }}
         </p>
       </div>
       <q-form class="col-md-7 col-xs-12 col-sm-12 q-gutter-y-md" @submit.prevent="handleSubmit">
         <q-input
-          label="Store Name"
+          :label=" $t('entity_name')"
           v-model="form.name"
-          :rules="[val => (val && val.length > 0) || 'Store Name is required']"
+          :rules="[val => (val && val.length > 0) ||  $t('required')]"
         />
         <q-input
-          label="`Phone"
+          :label=" $t('entity_phone')"
           v-model="form.phone"
-          :rules="[val => (val && val.length > 0) || 'Phone is required']"
+          :rules="[val => (val && val.length > 0) || $t('required')]"
           mask="(##) #####-####"
           unmasked-value
         />
 
         <q-input
-          label="Image Paralax"
+          label="Paralax"
           stack-label
           v-model="paralax"
           type="file"
@@ -32,11 +32,22 @@
           <q-color v-model="form.primary" class="col-md-4 col-sm-12 col-xs-12"/>
           <q-color v-model="form.secondary"  class="col-md-4 col-sm-12 col-xs-12" />
         </div>
-        <q-btn label="Save" color="primary" class="full-width" rounded type="submit"/>
-        <q-btn label="Cancel" color="primary" class="full-width" rounded flat :to="{ name: 'category' }"/>
+        <q-btn
+          :label="$t('btn_save')"
+          color="primary"
+          class="full-width"
+          rounded type="submit"
+        />
+        <q-btn
+          :label="$t('btn_cancel')"
+          color="primary"
+          class="full-width"
+          rounded
+          flat
+          :to="{ name: 'category' }"
+        />
       </q-form>
     </div>
-
   </q-page>
 </template>
 
@@ -79,10 +90,10 @@ export default defineComponent({
         }
         if (form.value.id) {
           await update(table, form.value)
-          notifySuccess(`${form.value.name} updated successfully`)
+          notifySuccess(`${form.value.name} atualizado com sucesso`)
         } else {
           await create(table, form.value)
-          notifySuccess(`${form.value.name} saved successfully`)
+          notifySuccess(`${form.value.name} salvo com sucesso`)
         }
         setBrand(form.value.primary, form.value.secondary)
         router.push({ name: 'me' })

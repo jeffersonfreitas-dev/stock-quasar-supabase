@@ -1,16 +1,46 @@
 <template>
   <q-page padding>
     <q-form class="row justify-center" @submit.prevent="handleLogin">
-      <p class="col-12 text-h5 text-center">Login</p>
+      <p class="col-12 text-h5 text-center">{{ $t('login') }}</p>
       <div class="col-md-4 col-sn-6 col-xs-10 q-gutter-y-md">
-        <q-input label="Email" v-model="form.email" :rules="[val => (val && val.length > 0) || 'Email is required']" type="email"/>
-        <q-input type="password" label="Password" v-model="form.password" :rules="[val => (val && val.length > 0) || 'Password is required']"/>
+        <q-input
+          :label="$t('entity_email')"
+          v-model="form.email"
+          :rules="[val => (val && val.length > 0) || $t('required')]"
+          type="email"
+        />
+        <q-input
+          type="password"
+          :label="$t('entity_password')"
+          v-model="form.password"
+          :rules="[val => (val && val.length > 0) || $t('required')]"
+        />
         <div class="full-width q-pt-md">
-          <q-btn label="Login" color="primary" class="full-width" rounded outline type="submit"/>
+          <q-btn
+            :label="$t('btn_login')"
+            color="primary"
+            class="full-width"
+            rounded
+            outline
+            type="submit"
+          />
         </div>
         <div class="full-width q-gutter-y-sm">
-          <q-btn label="Register" color="primary" class="full-width" size="sm" flat to="/register"/>
-          <q-btn label="Forgot Password" color="primary" class="full-width" size="sm" flat :to="{ name: 'forgot-password' }" />
+          <q-btn
+            :label="$t('btn_register')"
+            color="primary"
+            class="full-width"
+            size="sm"
+            flat to="/register"
+          />
+          <q-btn
+            :label="$t('btn_forgot_password')"
+            color="primary"
+            class="full-width"
+            size="sm"
+            flat
+            :to="{ name: 'forgot-password' }"
+          />
         </div>
       </div>
     </q-form>
@@ -44,7 +74,7 @@ export default defineComponent({
     const handleLogin = async () => {
       try {
         await login(form.value)
-        notifySuccess('Login successfully! Wellcome')
+        notifySuccess('Seja bem vindo(a)!')
         router.push({ name: 'me' })
       } catch (error) {
         notifyError(error.message)

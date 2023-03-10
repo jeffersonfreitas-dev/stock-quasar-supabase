@@ -3,12 +3,12 @@
     <div class="row justify-center">
       <div class="col-12 text-center">
         <p class="text-h6">
-          Form Product
+          {{ $t('product') }}
         </p>
       </div>
       <q-form class="col-md-7 col-xs-12 col-sm-12 q-gutter-y-md" @submit.prevent="handleSubmit">
         <q-input
-          label="Image"
+          :label="$t('entity_image')"
           stack-label
           v-model="img"
           type="file"
@@ -16,44 +16,44 @@
         />
 
         <q-input
-          label="Name"
+          :label="$t('entity_name')"
           v-model="form.name"
-          :rules="[val => (val && val.length > 0) || 'Name is required']"
+          :rules="[val => (val && val.length > 0) || $t('required')]"
         />
         <q-editor
-          label="Description"
+          :label="$t('entity_description')"
           min-height="5rem"
           v-model="form.description"
         />
         <q-input
-          label="Amount"
+          :label="$t('entity_amount')"
           type="number"
           v-model="form.amount"
-          :rules="[val => !!val || 'Amount is required']"
+          :rules="[val => !!val || $t('required')]"
         />
         <q-input
-          label="Price"
+          :label="$t('entity_price')"
           v-model="form.price"
-          :rules="[val => !!val || 'Price is required']"
+          :rules="[val => !!val || $t('entity_price')]"
           prefix="R$"
         />
         <q-select
           v-model="form.category_id"
           :options="optionsCategory"
-          label="Category"
+          :label="$t('entity_category')"
           option-value="id"
           option-label="name"
           map-options
           emit-value
-          :rules="[val => !!val || 'Category is required']"
+          :rules="[val => !!val || $t('required')]"
         />
         <q-btn
-          :label="isUpdate ? 'Update' : 'Save'"
+          :label="isUpdate ? $t('btn_update') : $t('btn_save')"
           color="primary" class="full-width"
           rounded type="submit"
         />
         <q-btn
-          label="Cancel"
+          :label="$t('btn_cancel')"
           color="primary"
           class="full-width"
           rounded
@@ -62,7 +62,6 @@
         />
       </q-form>
     </div>
-
   </q-page>
 </template>
 
@@ -111,10 +110,10 @@ export default defineComponent({
         }
         if (isUpdate.value) {
           await update(table, { ...form.value })
-          notifySuccess(`${form.value.name} updated successfully`)
+          notifySuccess(`${form.value.name} atualizado com sucesso`)
         } else {
           await create(table, form.value)
-          notifySuccess(`${form.value.name} saved successfully`)
+          notifySuccess(`${form.value.name} salvo com sucesso`)
         }
         router.push({ name: 'product' })
       } catch (error) {

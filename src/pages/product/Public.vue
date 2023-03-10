@@ -10,7 +10,7 @@
         map-options
         emit-value
         clearable
-        label="Category"
+        :label="$t('category')"
         class="col-12"
         dense
         @update:model-value="handleListProducts(route.params.id)"
@@ -28,10 +28,10 @@
       >
       <template v-slot:top>
           <span class="text-h6">
-            Products
+            {{ $t('product') }}
           </span>
           <q-space />
-          <q-input outlined dense debounce="300" v-model="filter" placeholder="Search" class="q-mr-sm">
+          <q-input outlined dense debounce="300" v-model="filter" placeholder="Procurar" class="q-mr-sm">
             <template v-slot:append>
               <q-icon name="mdi-magnify" />
             </template>

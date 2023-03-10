@@ -5,8 +5,9 @@
         :rows="categories"
         :columns="columnsCategory"
         row-key="id"
-        class="col-12"
+        class="col-12 q-mb-md"
         :loading="loading"
+        hide-pagination
       >
         <template v-slot:top>
           <span class="text-h6">{{ $t('category') }}</span>
@@ -47,6 +48,14 @@
         </template>
       </q-table>
     </div>
+    <div class="row justify-center">
+      <q-pagination
+        v-model="initialPagination.page"
+        :max="pagesNumber"
+        direction-links
+        @update:model-value="handleScrollToTop"
+      />
+    </div>
     <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="$q.platform.is.mobile">
       <q-btn fab icon="mdi-plus" color="primary" :to="{ name: 'form-category' }"/>
     </q-page-sticky>
@@ -54,12 +63,12 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import { useQuasar } from 'quasar'
-import { columnsCategory } from './table'
+import { columnsCategory, initialPagination } from './table'
 import useAuthUser from 'src/composables/UseAuthUser'
 
 export default defineComponent({
@@ -87,13 +96,13 @@ export default defineComponent({
     const handleRemove = async (category) => {
       try {
         $q.dialog({
-          title: 'Confirm',
-          message: `Do you really delete ${category.name} ?`,
+          title: 'Deletar',
+          message: `Deseja realmente deletar ${category.name} ?`,
           cancel: true,
           persistent: true
         }).onOk(async () => {
           await remove(table, category.id)
-          notifySuccess(`${category.name} removed successfully`)
+          notifySuccess(`${category.name} removido com sucesso!`)
           handleListCategories()
         })
       } catch (error) {
@@ -105,6 +114,10 @@ export default defineComponent({
       router.push({ name: 'form-category', params: { id: category.id } })
     }
 
+    const handleScrollToTop = () => {
+      window.scroll({ top: 0, behavior: 'smooth' })
+    }
+
     onMounted(() => {
       handleListCategories()
     })
@@ -114,7 +127,10 @@ export default defineComponent({
       categories,
       loading,
       handleEdit,
-      handleRemove
+      handleRemove,
+      handleScrollToTop,
+      initialPagination,
+      pagesNumber: computed(() => Math.ceil(categories.value.length / initialPagination.value.rowsPerPage))
     }
   }
 })
