@@ -221,7 +221,14 @@ module.exports = configure(function (ctx) {
             sizes: "466x639",
             type: "image/png",
             platform: "wide",
-            label: "Homescreen of Awesome App"
+            label: "Tela de listagem dos produtos cadastrados"
+          },
+          {
+            src: "login.png",
+            sizes: "518x765",
+            type: "image/png",
+            platform: "wide",
+            label: "Tela de login"
           },
         ],
         icons: [
