@@ -184,9 +184,9 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: 'Stock Quasar',
-        short_name: 'Stock Quasar',
-        description: 'App Stock fácil na palma da sua mão',
+        name: 'Stock Set',
+        short_name: 'Stock Set',
+        description: 'Seu estoque fácil na palma da sua mão',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
