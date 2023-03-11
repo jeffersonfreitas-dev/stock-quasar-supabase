@@ -192,6 +192,29 @@ module.exports = configure(function (ctx) {
         background_color: '#ffffff',
         theme_color: '#2c9c6a',
         categories: ["productivity", "shopping", "utilities"],
+        scope: 'https://stock-set.netlify.app',
+        shortcuts: [
+          {
+            name: "Minha tela",
+            url: "/me",
+            description: "Tela onde é exibida as informações do usuário"
+          },
+          {
+            name: "Categoria",
+            url: "/category",
+            description: "Tela de listagem e cadastro de categorias"
+          },
+          {
+            name: "Produto",
+            url: "/product",
+            description: "Tela de listagem e cadastro de produtos"
+          },
+          {
+            name: "Minha loja",
+            url: "/product-public",
+            description: "Tela onde é listada os produtos para o cliente"
+          }                              
+        ],
         icons: [
           {
             src: 'icons/icon-128x128.png',

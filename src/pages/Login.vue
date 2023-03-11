@@ -1,7 +1,9 @@
 <template>
   <q-page padding>
+    <div class="row justify-center">
+      <img src="../../public/icons/apple-icon-120x120.png" class="q-mt-lg"/>
+    </div>
     <q-form class="row justify-center" @submit.prevent="handleLogin">
-      <img src="../../public/icons/apple-icon-180x180.png" class="q-mt-lg"/>
       <div class="col-md-4 col-sn-6 col-xs-10 q-gutter-y-md">
         <q-input
           :label="$t('entity_email')"
