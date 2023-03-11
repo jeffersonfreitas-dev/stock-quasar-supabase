@@ -215,6 +215,15 @@ module.exports = configure(function (ctx) {
             description: "Tela onde é listada os produtos para o cliente"
           }                              
         ],
+        screenshots: [
+          {
+            src: "listagem.png",
+            sizes: "466x639",
+            type: "image/png",
+            platform: "wide",
+            label: "Homescreen of Awesome App"
+          },
+        ],
         icons: [
           {
             src: 'icons/icon-128x128.png',
