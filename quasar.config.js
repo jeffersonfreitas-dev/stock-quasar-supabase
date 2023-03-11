@@ -191,6 +191,7 @@ module.exports = configure(function (ctx) {
         orientation: 'portrait',
         background_color: '#ffffff',
         theme_color: '#2c9c6a',
+        categories: ["productivity", "shopping", "utilities"],
         icons: [
           {
             src: 'icons/icon-128x128.png',
