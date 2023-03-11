@@ -6,7 +6,7 @@
           {{ $t('product') }}
         </p>
       </div>
-      <q-form class="col-md-7 col-xs-12 col-sm-12 q-gutter-y-md" @submit.prevent="handleSubmit">
+      <q-form class="col-md-7 col-xs-12 col-sm-12 q-gutter-y-md " @submit.prevent="handleSubmit">
         <q-input
           :label="$t('entity_image')"
           stack-label
