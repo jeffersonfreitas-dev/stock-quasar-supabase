@@ -186,7 +186,7 @@ module.exports = configure(function (ctx) {
       manifest: {
         name: 'Stock Set',
         short_name: 'Stock Set',
-        description: 'Seu estoque fácil na palma da sua mão',
+        description: 'Sua loja na palma da sua mão dos seus clientes',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
@@ -258,8 +258,14 @@ module.exports = configure(function (ctx) {
             type: 'image/png'
           },
           {
-            src: 'icons/maskable_icon.png',
+            src: 'icons/maskable_icon_x512.png',
             sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
+          },
+          {
+            src: 'icons/maskable_icon_x192.png',
+            sizes: '192x192',
             type: 'image/png',
             purpose: 'maskable'
           }
