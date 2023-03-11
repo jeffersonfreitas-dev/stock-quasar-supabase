@@ -3,7 +3,7 @@
     <q-header elevated>
       <q-toolbar>
         <q-toolbar-title>
-          {{ brand.name }}
+          Stock Set
         </q-toolbar-title>
       </q-toolbar>
     </q-header>

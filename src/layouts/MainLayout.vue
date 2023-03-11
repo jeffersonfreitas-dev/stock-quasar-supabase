@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          {{ brand.name || 'Stock'}}
+          Stock Set
         </q-toolbar-title>
 
         <q-btn-dropdown flat color="white" icon="person">
