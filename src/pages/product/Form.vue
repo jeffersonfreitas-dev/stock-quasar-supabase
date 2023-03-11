@@ -26,12 +26,6 @@
           v-model="form.description"
         />
         <q-input
-          :label="$t('entity_amount')"
-          type="number"
-          v-model="form.amount"
-          :rules="[val => !!val || $t('required')]"
-        />
-        <q-input
           :label="$t('entity_price')"
           v-model="form.price"
           :rules="[val => !!val || $t('entity_price')]"
@@ -102,6 +96,7 @@ export default defineComponent({
     })
 
     const handleSubmit = async () => {
+      form.value.price = form.value.price.replace(',', '.')
       try {
         if (img.value.length > 0) {
           console.log(img.value)
