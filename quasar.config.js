@@ -11,7 +11,6 @@
 const ESLintPlugin = require('eslint-webpack-plugin')
 
 const { configure } = require('quasar/wrappers')
-const path = require('path')
 
 module.exports = configure(function (ctx) {
   return {
@@ -22,7 +21,7 @@ module.exports = configure(function (ctx) {
     // preFetch: true,
 
     // app boot file (/src/boot)
-    // --> boot files are part of "main.js"
+    // --> boot files are part of 'main.js'
     // https://v2.quasar.dev/quasar-cli-webpack/boot-files
     boot: [
       'supabase',
@@ -63,7 +62,7 @@ module.exports = configure(function (ctx) {
 
       // Add dependencies for transpiling with Babel (Array of string/regex)
       // (from node_modules, which are by default not transpiled).
-      // Applies only if "transpile" is set to true.
+      // Applies only if 'transpile' is set to true.
       // transpileDependencies: [],
 
       // rtl: true, // https://quasar.dev/options/rtl-support
@@ -76,7 +75,7 @@ module.exports = configure(function (ctx) {
       // extractCSS: false,
 
       // https://v2.quasar.dev/quasar-cli-webpack/handling-webpack
-      // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
+      // 'chain' is a webpack-chain object https://github.com/neutrinojs/webpack-chain
 
       chainWebpack (chain) {
         /*
@@ -93,8 +92,8 @@ module.exports = configure(function (ctx) {
           .resourceQuery(/blockType=i18n/)
           .type('javascript/auto')
           .use('i18n')
-            .loader('@intlify/vue-i18n-loader')     
-        */       
+            .loader('@intlify/vue-i18n-loader')
+        */
         chain.plugin('eslint-webpack-plugin')
           .use(ESLintPlugin, [{ extensions: ['js', 'vue'] }])
       }
@@ -129,7 +128,7 @@ module.exports = configure(function (ctx) {
       },
 
       // iconSet: 'material-icons', // Quasar icon set
-      lang: 'en-US', // Quasar language pack
+      lang: 'pt-BR', // Quasar language pack
 
       // For special cases outside of where the auto-import strategy can have an impact
       // (like functional components as one of the examples),
@@ -191,45 +190,46 @@ module.exports = configure(function (ctx) {
         orientation: 'portrait',
         background_color: '#ffffff',
         theme_color: '#2c9c6a',
-        categories: ["productivity", "shopping", "utilities"],
+        categories: ['productivity', 'shopping', 'utilities'],
         scope: 'https://stock-set.netlify.app',
+        start_url: 'https://stock-set.netlify.app',
         shortcuts: [
           {
-            name: "Minha tela",
-            url: "/me",
-            description: "Tela onde é exibida as informações do usuário"
+            name: 'Minha tela',
+            url: '/me',
+            description: 'Tela onde é exibida as informações do usuário'
           },
           {
-            name: "Categoria",
-            url: "/category",
-            description: "Tela de listagem e cadastro de categorias"
+            name: 'Categoria',
+            url: '/category',
+            description: 'Tela de listagem e cadastro de categorias'
           },
           {
-            name: "Produto",
-            url: "/product",
-            description: "Tela de listagem e cadastro de produtos"
+            name: 'Produto',
+            url: '/product',
+            description: 'Tela de listagem e cadastro de produtos'
           },
           {
-            name: "Minha loja",
-            url: "/product-public",
-            description: "Tela onde é listada os produtos para o cliente"
-          }                              
+            name: 'Minha loja',
+            url: '/product-public',
+            description: 'Tela onde é listada os produtos para o cliente'
+          }
         ],
         screenshots: [
           {
-            src: "listagem.png",
-            sizes: "466x639",
-            type: "image/png",
-            platform: "wide",
-            label: "Tela de listagem dos produtos cadastrados"
+            src: 'listagem.png',
+            sizes: '466x639',
+            type: 'image/png',
+            platform: 'wide',
+            label: 'Tela de listagem dos produtos cadastrados'
           },
           {
-            src: "login.png",
-            sizes: "518x765",
-            type: "image/png",
-            platform: "wide",
-            label: "Tela de login"
-          },
+            src: 'login.png',
+            sizes: '518x765',
+            type: 'image/png',
+            platform: 'wide',
+            label: 'Tela de login'
+          }
         ],
         icons: [
           {
@@ -306,7 +306,7 @@ module.exports = configure(function (ctx) {
         appId: 'quasar-supabase'
       },
 
-      // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
+      // 'chain' is a webpack-chain object https://github.com/neutrinojs/webpack-chain
 
       chainWebpackMain (chain) {
         chain.plugin('eslint-webpack-plugin')
