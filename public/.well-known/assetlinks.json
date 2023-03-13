@@ -1,6 +1,6 @@
 [{
-        "relation": ["delegate_permission/common.handle_all_urls"],
-        "target" : { "namespace": "android_app", "package_name": "app.netlify.stock_set.twa",
-                     "sha256_cert_fingerprints": ["46:AC:2B:7A:4B:84:3F:1A:27:CA:35:74:C2:88:8C:BD:4C:18:EF:08:14:B6:3E:21:F2:C6:12:71:E3:85:B4:43"] }
-      }
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target" : { "namespace": "android_app", "package_name": "app.netlify.stock_set.twa",
+                "sha256_cert_fingerprints": ["77:F0:07:69:20:16:FC:B3:B3:E4:4C:76:72:4E:78:B1:86:59:AC:82:7B:26:84:16:A6:41:D6:7D:FF:85:76:D0"] }
+  }
 ]
