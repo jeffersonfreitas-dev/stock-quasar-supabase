@@ -183,11 +183,13 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: 'Stock Set',
+        name: 'Stock Set: App para suas vendas',
         short_name: 'Stock Set',
-        description: 'Sua loja na palma da sua mão dos seus clientes',
+        description: 'App para catálogos e vendas em geral',
         display: 'standalone',
         orientation: 'portrait',
+        dir: 'ltr',
+        lang: 'pt-BR',
         background_color: '#ffffff',
         theme_color: '#2c9c6a',
         categories: ['productivity', 'shopping', 'utilities'],
