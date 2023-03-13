@@ -193,8 +193,6 @@ module.exports = configure(function (ctx) {
         background_color: '#ffffff',
         theme_color: '#2c9c6a',
         categories: ['productivity', 'shopping', 'utilities'],
-        scope: 'https://stock-set.netlify.app',
-        start_url: 'https://stock-set.netlify.app',
         shortcuts: [
           {
             name: 'Minha tela',
