@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <div class="row justify-center">
-      <img src="../../public/icons/apple-icon-120x120.png" class="q-mt-lg"/>
+      <img src="../../public/icons/apple-icon-120x120.png" class="q-mt-lg" alt="logo"/>
     </div>
     <q-form class="row justify-center" @submit.prevent="handleLogin">
       <div class="col-md-4 col-sn-6 col-xs-10 q-gutter-y-md">
@@ -59,7 +59,7 @@ export default defineComponent({
   name: 'PageLogin',
   setup () {
     const router = useRouter()
-    const { login, isLoggedIn } = useAuthUser()
+    const { isLoggedIn, login } = useAuthUser()
     const { notifyError, notifySuccess } = useNotify()
 
     const form = ref({
@@ -68,7 +68,7 @@ export default defineComponent({
     })
 
     onMounted(() => {
-      if (isLoggedIn) {
+      if (!isLoggedIn) {
         router.push({ name: 'me' })
       }
     })

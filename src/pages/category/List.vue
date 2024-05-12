@@ -75,19 +75,19 @@ import useAuthUser from 'src/composables/UseAuthUser'
 export default defineComponent({
   name: 'PageCategoryList',
   setup () {
-    const { listPublic, remove } = useApi()
+    const { remove, list } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const router = useRouter()
-    const categories = ref([])
     const loading = ref(true)
     const table = 'category'
     const $q = useQuasar()
     const { user } = useAuthUser()
+    const categories = ref([])
 
     const handleListCategories = async () => {
       try {
         loading.value = true
-        categories.value = await listPublic(table, user.value.id)
+        categories.value = await list('users', user.value.uuid, 'categories')
         loading.value = false
       } catch (error) {
         notifyError(error.message)

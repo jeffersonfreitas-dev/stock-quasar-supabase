@@ -37,6 +37,9 @@ import { defineComponent, ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
+import useAuthUser from 'src/composables/UseAuthUser'
+import db from 'src/utils/database/users'
+import { v4 as uuidv4 } from 'uuid'
 
 export default defineComponent({
   name: 'PageFormCategory',
@@ -44,18 +47,21 @@ export default defineComponent({
     const table = 'category'
     const router = useRouter()
     const route = useRoute()
-    const { create, getById, update } = useApi()
+    const { update } = useApi()
     const { notifyError, notifySuccess } = useNotify()
-    let category = {}
+    const { user } = useAuthUser()
+    // const category = {}
+
     const form = ref({
       name: ''
     })
 
     const isUpdate = computed(() => route.params.id)
+
     onMounted(() => {
-      if (isUpdate.value) {
-        handleGetCategory(isUpdate.value)
-      }
+      // if (isUpdate.value) {
+      //   handleGetCategory(isUpdate.value)
+      // }
     })
 
     const handleSubmit = async () => {
@@ -64,7 +70,12 @@ export default defineComponent({
           await update(table, { ...form.value })
           notifySuccess(`${form.value.name} updated successfully`)
         } else {
-          await create(table, form.value)
+          const newCategory = {
+            uuid: uuidv4(),
+            name: form.value.name,
+            userId: user.uuid
+          }
+          db.categories.push(newCategory)
           notifySuccess(`${form.value.name} saved successfully`)
         }
         router.push({ name: 'category' })
@@ -73,14 +84,14 @@ export default defineComponent({
       }
     }
 
-    const handleGetCategory = async (id) => {
-      try {
-        category = await getById(table, id)
-        form.value = category
-      } catch (error) {
-        notifyError(error.message)
-      }
-    }
+    // const handleGetCategory = async (id) => {
+    //   try {
+    //     category = db.categories.filter(obj => obj.uuid === id)
+    //     form.value = category
+    //   } catch (error) {
+    //     notifyError(error.message)
+    //   }
+    // }
 
     return {
       form,
