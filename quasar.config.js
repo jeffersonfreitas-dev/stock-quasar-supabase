@@ -25,7 +25,6 @@ module.exports = configure(function (ctx) {
     // https://v2.quasar.dev/quasar-cli-webpack/boot-files
     boot: [
       'firebase',
-      'supabase',
       'i18n',
       'axios'
     ],
@@ -53,10 +52,6 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
-      env: {
-        SUPABASE_URL: 'https://bfbizobxxovoqqequxun.supabase.co',
-        SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmYml6b2J4eG92b3FxZXF1eHVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzc0NDU2OTksImV4cCI6MTk5MzAyMTY5OX0.2seCs4RgN0a1nnD_ixWwijhTN4voRf6MduokN9Q6HZY'
-      },
 
       // transpile: false,
       // publicPath: '/',

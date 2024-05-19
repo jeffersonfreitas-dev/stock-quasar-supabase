@@ -92,7 +92,7 @@ import useAuthUser from 'src/composables/UseAuthUser'
 export default defineComponent({
   name: 'PageProductList',
   setup () {
-    const { list, remove } = useApi()
+    const { list, remove, removeImage } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const router = useRouter()
     const products = ref([])
@@ -137,6 +137,9 @@ export default defineComponent({
         }).onOk(async () => {
           loading.value = true
           await remove('users', user.value.uuid, 'products', product.uuid)
+          if (product.img_uuid) {
+            removeImage(user.value.uuid, product.img_uuid)
+          }
           notifySuccess(`${product.name} deletado com sucesso`)
           loading.value = true
           handleListProducts()

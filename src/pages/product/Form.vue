@@ -86,7 +86,8 @@ export default defineComponent({
       amount: 0,
       price: 0,
       category_id: '',
-      img_uuid: ''
+      img_uuid: '',
+      img_url: ''
     })
 
     const isUpdate = computed(() => route.params.id)

@@ -9,7 +9,7 @@
       <q-form class="col-md-7 col-xs-12 col-sm-12 q-gutter-y-md" @submit.prevent="handleSubmit">
         <q-input
           :label=" $t('entity_name')"
-          v-model="form.name"
+          v-model="form.company"
           :rules="[val => (val && val.length > 0) ||  $t('required')]"
         />
         <q-input
@@ -58,24 +58,26 @@ import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import useBrand from 'src/composables/UseBrand'
 import useAuthUser from 'src/composables/UseAuthUser'
+import { v4 as uuidv4 } from 'uuid'
 
 export default defineComponent({
   name: 'PageFormConfig',
   setup () {
-    const table = 'config'
     const router = useRouter()
     const { setBrand } = useBrand()
-    const { create, listPublic, update, uploadImg } = useApi()
+    const { create, list, update, uploadImg } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const { user } = useAuthUser()
     let config = {}
     const paralax = ref([])
     const form = ref({
-      name: '',
+      uuid: '',
+      company: '',
       phone: '',
       primary: '',
       secondary: '',
-      img_paralax: ''
+      img_paralax: '',
+      uuid_paralax: ''
     })
 
     onMounted(() => {
@@ -85,14 +87,18 @@ export default defineComponent({
     const handleSubmit = async () => {
       try {
         if (paralax.value.length > 0) {
-          const imgUrl = await uploadImg(paralax.value[0], 'paralax')
+          const uuidImg = uuidv4()
+          const imgUrl = await uploadImg(paralax.value[0], user.value.uuid, uuidImg)
           form.value.img_paralax = imgUrl
+          form.value.uuid_paralax = uuidImg
         }
-        if (form.value.id) {
-          await update(table, form.value)
+        if (form.value.uuid) {
+          await update('users', user.value.uuid, 'config', form.value.uuid, form.value)
           notifySuccess(`${form.value.name} atualizado com sucesso`)
         } else {
-          await create(table, form.value)
+          const uuidConfig = uuidv4()
+          form.value.uuid = uuidConfig
+          await create('users', user.value.uuid, form.value, 'config')
           notifySuccess(`${form.value.name} salvo com sucesso`)
         }
         setBrand(form.value.primary, form.value.secondary)
@@ -104,8 +110,11 @@ export default defineComponent({
 
     const handleGetConfig = async () => {
       try {
-        config = await listPublic(table, user.value.id)
-        form.value = config[0]
+        config = await list('users', user.value.uuid, 'config')
+        if (config.length > 0) {
+          console.log('dddd')
+          form.value = config[0]
+        }
       } catch (error) {
         notifyError(error.message)
       }

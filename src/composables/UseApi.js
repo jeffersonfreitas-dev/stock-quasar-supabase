@@ -1,6 +1,6 @@
 import { ref as vueRef } from 'vue'
 import { doc, getDoc, collection, getDocs, setDoc, deleteDoc, updateDoc } from 'firebase/firestore'
-import { uploadBytes, ref, getDownloadURL } from 'firebase/storage'
+import { uploadBytes, ref, getDownloadURL, deleteObject } from 'firebase/storage'
 import { db, storage } from 'src/boot/firebase'
 // import useAuthUser from './UseAuthUser'
 // import { v4 as uuidv4 } from 'uuid'
@@ -18,7 +18,7 @@ const brand = vueRef({
 })
 
 export default function () {
-  // const { user } = useAuthUser()
+  // const { user: uuu } = useAuthUser()
   // const route = useRoute()
   // const { setBrand } = useBrand()
   // const $q = useQuasar()
@@ -111,7 +111,19 @@ export default function () {
       const url = await getDownloadURL(ref(storage, path))
       return url
     } catch (error) {
-      console.log(error)
+      console.log(error.message)
+      throw new Error('Erro ao realizar o upload da foto')
+    }
+  }
+
+  const removeImage = async (uuid, imgUUID) => {
+    const path = `${uuid}/${imgUUID}`
+    try {
+      const storageRef = ref(storage, path)
+      deleteObject(storageRef)
+        .then(() => console.log('Foto deletada' + imgUUID))
+    } catch (error) {
+      console.log(error.message)
     }
   }
 
@@ -119,23 +131,6 @@ export default function () {
     // const { publicURL, error } = supabase.storage.from(storage).getPublicUrl(fileName)
     // if (error) throw error
     // return publicURL
-  }
-
-  const getBrand = async () => {
-    // const id = route.params.id || user?.value?.id
-    // if (id) {
-    //   $q.loading.show({
-    //     backgroundColor: 'dark-10'
-    //   })
-    //   const { data, error } = await supabase.from('config').select('*').eq('user_id', id)
-    //   if (error) throw error
-    //   if (data.length > 0) {
-    //     brand.value = data[0]
-    //     setBrand(brand.value.primary, brand.value.secondary)
-    //   }
-    //   $q.loading.hide()
-    //   return brand
-    // }
   }
 
   return {
@@ -146,7 +141,7 @@ export default function () {
     update,
     remove,
     uploadImg,
-    getBrand,
+    removeImage,
     brand,
     getUrlPublic
   }
