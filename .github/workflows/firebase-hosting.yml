@@ -12,13 +12,20 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '18'
-      - name: Configurar Envs
-        run: echo '${{ secrets.FIREBASE_CREDENTIALS }}' > src/boot/firebase.js
+
+      - name: Atualizando keys em firebase.js
+        run: |
+          sed -i "s/apikey: 'FIREBASE_APIKEY'/apikey: '${{ secrets.FIREBASE_APIKEY }}'/" src/boot/firebase.js
+          sed -i "s/apikey: 'FIREBASE_PROJECTID'/apikey: '${{ secrets.FIREBASE_PROJECTID }}'/" src/boot/firebase.js
+          sed -i "s/apikey: 'FIREBASE_STORAGE'/apikey: '${{ secrets.FIREBASE_STORAGE }}'/" src/boot/firebase.js
+          sed -i "s/apikey: 'FIREBASE_APPID'/apikey: '${{ secrets.FIREBASE_APPID }}'/" src/boot/firebase.js
 
       - name: Install dependencies
         run: yarn
+
       - name: Atualizar browsers
         run: npx update-browserslist-db@latest
+
       - name: Build project
         run: yarn quasar build
       - uses: FirebaseExtended/action-hosting-deploy@v0
