@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: '18'
       - name: Configurar Envs
-        run: echo '${{ secrets.FIREBASE_CREDENTIALS }}' > /src/boot/firebase.js
+        run: echo '${{ secrets.FIREBASE_CREDENTIALS }}' > src/boot/firebase.js
 
       - name: Install dependencies
         run: npm install
