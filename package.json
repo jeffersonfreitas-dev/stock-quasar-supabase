@@ -1,8 +1,8 @@
 {
-  "name": "quasar-supabase",
+  "name": "stockset",
   "version": "0.0.1",
-  "description": "A stock quasar app with supabase",
-  "productName": "Stock Quasar",
+  "description": "A stock quasar app",
+  "productName": "StockSet",
   "author": "Jefferson Freitas",
   "private": true,
   "scripts": {
@@ -12,9 +12,9 @@
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "@quasar/icongenie": "^2.5.4",
-    "@supabase/supabase-js": "^1.28.5",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "firebase": "^10.11.1",
     "quasar": "^2.6.0",
     "uuid": "^8.3.2",
     "vue": "^3.0.0",

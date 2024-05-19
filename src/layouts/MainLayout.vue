@@ -60,6 +60,7 @@ import useAuthUser from 'src/composables/UseAuthUser'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import useApi from 'src/composables/UseApi'
+import useBrand from 'src/composables/UseBrand'
 
 const linksList = [
   {
@@ -98,12 +99,17 @@ export default defineComponent({
   setup () {
     const leftDrawerOpen = ref(false)
     const router = useRouter()
-    const { logout } = useAuthUser()
+    const { logout, user } = useAuthUser()
     const $q = useQuasar()
-    const { getBrand, brand } = useApi()
+    const { list } = useApi()
+    const { setBrand } = useBrand()
 
-    onMounted(() => {
-      getBrand()
+    onMounted(async () => {
+      const config = await list('users', user.value.uuid, 'config')
+      if (config.length > 0) {
+        console.log(config[0])
+        setBrand(config[0].primary, config[0].secondary)
+      }
     })
 
     const handleLogout = async () => {
@@ -117,7 +123,6 @@ export default defineComponent({
     return {
       essentialLinks: linksList,
       leftDrawerOpen,
-      brand,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
       },

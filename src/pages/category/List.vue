@@ -75,19 +75,20 @@ import useAuthUser from 'src/composables/UseAuthUser'
 export default defineComponent({
   name: 'PageCategoryList',
   setup () {
-    const { listPublic, remove } = useApi()
+    const { remove, list } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const router = useRouter()
-    const categories = ref([])
     const loading = ref(true)
-    const table = 'category'
     const $q = useQuasar()
     const { user } = useAuthUser()
+    const categories = ref([])
 
     const handleListCategories = async () => {
       try {
         loading.value = true
-        categories.value = await listPublic(table, user.value.id)
+        console.log(user.value)
+        categories.value = await list('users', user.value.uuid, 'categories')
+        console.log(categories)
         loading.value = false
       } catch (error) {
         notifyError(error.message)
@@ -95,6 +96,7 @@ export default defineComponent({
     }
 
     const handleRemove = async (category) => {
+      console.log(category)
       try {
         $q.dialog({
           title: 'Deletar',
@@ -102,7 +104,7 @@ export default defineComponent({
           cancel: true,
           persistent: true
         }).onOk(async () => {
-          await remove(table, category.id)
+          await remove('users', user.value.uuid, 'categories', category.uuid)
           notifySuccess(`${category.name} removido com sucesso!`)
           handleListCategories()
         })
@@ -112,7 +114,7 @@ export default defineComponent({
     }
 
     const handleEdit = (category) => {
-      router.push({ name: 'form-category', params: { id: category.id } })
+      router.push({ name: 'form-category', params: { id: category.uuid } })
     }
 
     const handleScrollToTop = () => {
