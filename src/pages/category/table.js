@@ -6,7 +6,7 @@ const columnsCategory = [
 
 const initialPagination = ref({
   page: 1,
-  rowsPerPage: 8
+  rowsPerPage: 10
 })
 
 export {

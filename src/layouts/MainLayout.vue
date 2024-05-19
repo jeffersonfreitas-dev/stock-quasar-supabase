@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Stock Set
+          StockSet
         </q-toolbar-title>
 
         <q-btn-dropdown flat color="white" icon="person">

@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail } from 'firebase/auth'
 import useApi from 'src/composables/UseApi'
 
 const user = ref(null)
@@ -41,10 +41,9 @@ export default function useAuthUser () {
     }
   }
 
-  // const logout = async () => {
-  //   const { error } = await supabase.auth.signOut()
-  //   if (error) throw error
-  // }
+  const logout = async () => {
+    user.value.vaue = null
+  }
 
   const isLoggedIn = () => {
     return !!user.value
@@ -87,32 +86,20 @@ export default function useAuthUser () {
     }
   }
 
-  // const update = async (data) => {
-  //   const { user, error } = await supabase.auth.update(data)
-  //   if (error) throw error
-  //   return user
-  // }
-
-  // const sendPasswordRestEmail = async (data) => {
-  //   const { user, error } = await supabase.auth.api.resetPasswordForEmail(data)
-  //   if (error) throw error
-  //   return user
-  // }
-
-  // const resetPassword = async (token, newPassword) => {
-  //   const { user, error } = await supabase.auth.api.updateUser(token, { password: newPassword })
-  //   if (error) throw error
-  //   return user
-  // }
+  const sendPasswordRestEmail = async (email) => {
+    try {
+      sendPasswordResetEmail(auth, email)
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
 
   return {
     user,
     login,
-    // logout,
+    logout,
     isLoggedIn,
-    register
-    // update,
-    // resetPassword,
-    // sendPasswordRestEmail
+    register,
+    sendPasswordRestEmail
   }
 }

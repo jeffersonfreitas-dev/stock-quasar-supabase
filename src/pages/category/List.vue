@@ -7,17 +7,17 @@
         v-model:pagination="initialPagination"
         row-key="id"
         class="col-12 q-mb-md"
-        :loading="loading"
         hide-pagination
       >
         <template v-slot:top>
           <span class="text-h6">{{ $t('category') }}</span>
           <q-space />
           <q-btn
+            align="around"
+            class="btn-fixed-width q-py-md"
             :label="$t('btn_new')"
             color="primary"
-            icon="mdi-plus"
-            dense
+            icon="add_task"
             :to="{ name: 'form-category' }"
             v-if="$q.platform.is.desktop"
           />
@@ -49,7 +49,7 @@
         </template>
       </q-table>
     </div>
-    <div class="row justify-center">
+    <div class="row justify-center" v-if="categories.length > initialPagination.rowsPerPage">
       <q-pagination
         v-model="initialPagination.page"
         :max="pagesNumber"
@@ -78,25 +78,24 @@ export default defineComponent({
     const { remove, list } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const router = useRouter()
-    const loading = ref(true)
     const $q = useQuasar()
     const { user } = useAuthUser()
     const categories = ref([])
 
     const handleListCategories = async () => {
       try {
-        loading.value = true
-        console.log(user.value)
+        $q.loading.show({
+          message: 'Buscando os registros no banco de dados...'
+        })
         categories.value = await list('users', user.value.uuid, 'categories')
-        console.log(categories)
-        loading.value = false
+        $q.loading.hide()
       } catch (error) {
+        $q.loading.hide()
         notifyError(error.message)
       }
     }
 
     const handleRemove = async (category) => {
-      console.log(category)
       try {
         $q.dialog({
           title: 'Deletar',
@@ -104,11 +103,30 @@ export default defineComponent({
           cancel: true,
           persistent: true
         }).onOk(async () => {
-          await remove('users', user.value.uuid, 'categories', category.uuid)
-          notifySuccess(`${category.name} removido com sucesso!`)
-          handleListCategories()
+          $q.loading.show({
+            message: 'Verificando se o registro está sendo usado...'
+          })
+
+          const produtos = await list('users', user.value.uuid, 'products')
+          const exists = produtos.filter(prod => {
+            return prod.category_id === category.uuid
+          })
+          $q.loading.hide()
+
+          if (exists.length > 0) {
+            notifyError('A categoria não pode ser excluída, pois está sendo usada por outro registro')
+          } else {
+            $q.loading.show({
+              message: 'Realizando a exclusão do registro...'
+            })
+            await remove('users', user.value.uuid, 'categories', category.uuid)
+            notifySuccess(`${category.name} removido com sucesso!`)
+            handleListCategories()
+            $q.loading.hide()
+          }
         })
       } catch (error) {
+        $q.loading.hide()
         notifyError(error.message)
       }
     }
@@ -128,7 +146,6 @@ export default defineComponent({
     return {
       columnsCategory,
       categories,
-      loading,
       handleEdit,
       handleRemove,
       handleScrollToTop,

@@ -1,13 +1,14 @@
 <template>
   <q-page padding>
     <div class="row justify-center">
-      <div class="col-12 text-center">
+      <div class="col-12 text-center q-mt-lg">
         <p class="text-h6">
           {{ $t('product') }}
         </p>
       </div>
-      <q-form class="col-md-7 col-xs-12 col-sm-12 q-gutter-y-md " @submit.prevent="handleSubmit">
+      <q-form class="col-md-8 col-xs-12 col-sm-12 q-gutter-y-md " @submit.prevent="handleSubmit">
         <q-input
+          filled
           :label="$t('entity_image')"
           stack-label
           v-model="img"
@@ -16,22 +17,29 @@
         />
 
         <q-input
+          filled
           :label="$t('entity_name')"
           v-model="form.name"
           :rules="[val => (val && val.length > 0) || $t('required')]"
         />
-        <q-editor
-          :label="$t('entity_description')"
-          min-height="5rem"
-          v-model="form.description"
-        />
+
         <q-input
+          filled
+          :label="$t('entity_description')"
+          v-model="form.description"
+          type="textarea"
+        />
+
+        <q-input
+          filled
           :label="$t('entity_price')"
           v-model="form.price"
           :rules="[val => !!val || $t('entity_price')]"
           prefix="R$"
         />
+
         <q-select
+          filled
           v-model="categorySelected"
           :options="optionsCategory"
           :label="$t('entity_category')"
@@ -41,11 +49,16 @@
           emit-value
           :rules="[val => !!val || $t('required')]"
         />
-        <q-btn
+
+        <div class=" row justify-center">
+          <q-btn align="around"
+          class="btn-fixed-width q-py-md"
+          icon="save"
+          color="primary"
           :label="isUpdate ? $t('btn_update') : $t('btn_save')"
-          color="primary" class="full-width"
-          rounded type="submit"
-        />
+          type="submit"/>
+        </div>
+
         <q-btn
           :label="$t('btn_cancel')"
           color="primary"
@@ -66,6 +79,7 @@ import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import useAuthUser from 'src/composables/UseAuthUser'
 import { v4 as uuidv4 } from 'uuid'
+import { useQuasar } from 'quasar'
 
 export default defineComponent({
   name: 'PageFormProduct',
@@ -77,6 +91,7 @@ export default defineComponent({
     const { notifyError, notifySuccess } = useNotify()
     const { user } = useAuthUser()
     let product = {}
+    const $q = useQuasar()
     const categorySelected = ref()
     const optionsCategory = ref([])
     const img = ref([])
@@ -102,39 +117,60 @@ export default defineComponent({
       form.value.price = form.value.price.replace(',', '.')
       try {
         if (img.value.length > 0) {
+          $q.loading.show({
+            message: 'Realizando o upload da imagem do produto...'
+          })
           const imgUUID = uuidv4()
           const url = await uploadImg(img.value[0], user.value.uuid, imgUUID)
           form.value.img_uuid = imgUUID
           form.value.img_url = url
         }
         if (isUpdate.value) {
+          $q.loading.show({
+            message: 'Atualizando o registro...'
+          })
           await update(table, { ...form.value })
           notifySuccess(`${form.value.name} atualizado com sucesso`)
         } else {
+          $q.loading.show({
+            message: 'Salvando o registro...'
+          })
           form.value.uuid = uuidv4()
           form.value.category_id = categorySelected.value.uuid
           await create('users', user.value.uuid, form.value, 'products')
           notifySuccess(`${form.value.name} salvo com sucesso`)
         }
+        $q.loading.hide()
         router.push({ name: 'product' })
       } catch (error) {
+        $q.loading.hide()
         notifyError(error.message)
       }
     }
 
     const handleListCategory = async () => {
       try {
+        $q.loading.show({
+          message: 'Verificando as informações no banco de dados...'
+        })
         optionsCategory.value = await list('users', user.value.uuid, 'categories')
+        $q.loading.hide()
       } catch (error) {
+        $q.loading.hide()
         notifyError(error.message)
       }
     }
 
     const handleGetProduct = async (id) => {
       try {
+        $q.loading.show({
+          message: 'Verificando as informações no banco de dados...'
+        })
         product = await getById(table, id)
         form.value = product
+        $q.loading.hide()
       } catch (error) {
+        $q.loading.hide()
         notifyError(error.message)
       }
     }
