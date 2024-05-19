@@ -15,10 +15,10 @@ jobs:
 
       - name: Atualizando keys em firebase.js
         run: |
-          sed -i "s/apikey: 'FIREBASE_APIKEY'/apikey: '${{ secrets.FIREBASE_APIKEY }}'/" src/boot/firebase.js
-          sed -i "s/apikey: 'FIREBASE_PROJECTID'/apikey: '${{ secrets.FIREBASE_PROJECTID }}'/" src/boot/firebase.js
-          sed -i "s/apikey: 'FIREBASE_STORAGE'/apikey: '${{ secrets.FIREBASE_STORAGE }}'/" src/boot/firebase.js
-          sed -i "s/apikey: 'FIREBASE_APPID'/apikey: '${{ secrets.FIREBASE_APPID }}'/" src/boot/firebase.js
+          sed -i "s/'FIREBASE_APIKEY'/'${{ secrets.FIREBASE_APIKEY }}'/" src/boot/firebase.js
+          sed -i "s/'FIREBASE_PROJECTID'/'${{ secrets.FIREBASE_PROJECTID }}'/" src/boot/firebase.js
+          sed -i "s/'FIREBASE_STORAGE'/'${{ secrets.FIREBASE_STORAGE }}'/" src/boot/firebase.js
+          sed -i "s/'FIREBASE_APPID'/'${{ secrets.FIREBASE_APPID }}'/" src/boot/firebase.js
 
       - name: Install dependencies
         run: yarn
@@ -28,6 +28,7 @@ jobs:
 
       - name: Build project
         run: yarn quasar build
+
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
