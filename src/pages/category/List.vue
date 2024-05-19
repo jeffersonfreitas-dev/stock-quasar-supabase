@@ -79,7 +79,6 @@ export default defineComponent({
     const { notifyError, notifySuccess } = useNotify()
     const router = useRouter()
     const loading = ref(true)
-    const table = 'category'
     const $q = useQuasar()
     const { user } = useAuthUser()
     const categories = ref([])
@@ -87,7 +86,9 @@ export default defineComponent({
     const handleListCategories = async () => {
       try {
         loading.value = true
+        console.log(user.value)
         categories.value = await list('users', user.value.uuid, 'categories')
+        console.log(categories)
         loading.value = false
       } catch (error) {
         notifyError(error.message)
@@ -95,6 +96,7 @@ export default defineComponent({
     }
 
     const handleRemove = async (category) => {
+      console.log(category)
       try {
         $q.dialog({
           title: 'Deletar',
@@ -102,7 +104,7 @@ export default defineComponent({
           cancel: true,
           persistent: true
         }).onOk(async () => {
-          await remove(table, category.id)
+          await remove('users', user.value.uuid, 'categories', category.uuid)
           notifySuccess(`${category.name} removido com sucesso!`)
           handleListCategories()
         })
@@ -112,7 +114,7 @@ export default defineComponent({
     }
 
     const handleEdit = (category) => {
-      router.push({ name: 'form-category', params: { id: category.id } })
+      router.push({ name: 'form-category', params: { id: category.uuid } })
     }
 
     const handleScrollToTop = () => {

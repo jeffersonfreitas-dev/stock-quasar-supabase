@@ -13,11 +13,12 @@ export default function useAuthUser () {
       const userCredentials = await signInWithEmailAndPassword(auth, email, password)
       const userLogged = userCredentials.user
 
-      if (!userLogged.emailVerified) {
-        throw new Error('Usuário ainda não confirmou o e-mail')
-      }
+      // if (!userLogged.emailVerified) {
+      //   throw new Error('Usuário ainda não confirmou o e-mail')
+      // }
       const userDb = await getById('users', userLogged.uid)
       user.value = userDb
+      user.value.uuid = userLogged.uid
     } catch (error) {
       let message = 'Ocorreu um erro durante o login. '
       switch (error.code) {

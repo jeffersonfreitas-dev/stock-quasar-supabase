@@ -38,19 +38,16 @@ import { useRouter, useRoute } from 'vue-router'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import useAuthUser from 'src/composables/UseAuthUser'
-import db from 'src/utils/database/users'
 import { v4 as uuidv4 } from 'uuid'
 
 export default defineComponent({
   name: 'PageFormCategory',
   setup () {
-    const table = 'category'
     const router = useRouter()
     const route = useRoute()
-    const { update } = useApi()
+    const { update, create, getById } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const { user } = useAuthUser()
-    // const category = {}
 
     const form = ref({
       name: ''
@@ -59,23 +56,24 @@ export default defineComponent({
     const isUpdate = computed(() => route.params.id)
 
     onMounted(() => {
-      // if (isUpdate.value) {
-      //   handleGetCategory(isUpdate.value)
-      // }
+      if (isUpdate.value) {
+        handleGetCategory(isUpdate.value)
+      }
     })
 
     const handleSubmit = async () => {
       try {
         if (isUpdate.value) {
-          await update(table, { ...form.value })
+          await update('users', user.value.uuid, 'categories', isUpdate.value, { ...form.value })
           notifySuccess(`${form.value.name} updated successfully`)
         } else {
           const newCategory = {
             uuid: uuidv4(),
             name: form.value.name,
-            userId: user.uuid
+            userId: user.value.uuid
           }
-          db.categories.push(newCategory)
+          console.log(user.value)
+          await create('users', user.value.uuid, newCategory, 'categories')
           notifySuccess(`${form.value.name} saved successfully`)
         }
         router.push({ name: 'category' })
@@ -84,14 +82,14 @@ export default defineComponent({
       }
     }
 
-    // const handleGetCategory = async (id) => {
-    //   try {
-    //     category = db.categories.filter(obj => obj.uuid === id)
-    //     form.value = category
-    //   } catch (error) {
-    //     notifyError(error.message)
-    //   }
-    // }
+    const handleGetCategory = async (id) => {
+      try {
+        const category = await getById('users', user.value.uuid, 'categories', id)
+        form.value = category
+      } catch (error) {
+        notifyError(error.message)
+      }
+    }
 
     return {
       form,

@@ -92,19 +92,18 @@ import useAuthUser from 'src/composables/UseAuthUser'
 export default defineComponent({
   name: 'PageProductList',
   setup () {
-    const { listPublic, remove } = useApi()
+    const { list, remove } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const router = useRouter()
     const products = ref([])
     const loading = ref(true)
-    const table = 'product'
     const $q = useQuasar()
     const { user } = useAuthUser()
 
     const handleListProducts = async () => {
       try {
         loading.value = true
-        products.value = await listPublic(table, user.value.id)
+        products.value = await list('users', user.value.uuid, 'products')
         loading.value = false
       } catch (error) {
         notifyError(error.message)
@@ -112,12 +111,12 @@ export default defineComponent({
     }
 
     const handleGoToStore = () => {
-      const idUser = user.value.id
+      const idUser = user.value.uuid
       router.push({ name: 'product-public', params: { id: idUser } })
     }
 
     const handleCopyPublicLink = () => {
-      const idUser = user.value.id
+      const idUser = user.value.uuid
       const link = router.resolve({ name: 'product-public', params: { id: idUser } })
       const externalLink = window.origin + link.href
       copyToClipboard(externalLink)
@@ -136,8 +135,10 @@ export default defineComponent({
           cancel: true,
           persistent: true
         }).onOk(async () => {
-          await remove(table, product.id)
+          loading.value = true
+          await remove('users', user.value.uuid, 'products', product.uuid)
           notifySuccess(`${product.name} deletado com sucesso`)
+          loading.value = true
           handleListProducts()
         })
       } catch (error) {
@@ -146,7 +147,7 @@ export default defineComponent({
     }
 
     const handleEdit = (product) => {
-      router.push({ name: 'form-product', params: { id: product.id } })
+      router.push({ name: 'form-product', params: { id: product.uuid } })
     }
 
     const handleScrollToTop = () => {

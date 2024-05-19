@@ -1,20 +1,6 @@
 <template>
   <q-page padding>
     <div class="row">
-      <q-select
-        outlined
-        v-model="categoryId"
-        :options="optionsCategories"
-        option-label="name"
-        option-value="id"
-        map-options
-        emit-value
-        clearable
-        :label="$t('category')"
-        class="col-12"
-        dense
-        @update:model-value="handleListProducts(route.params.id)"
-      />
       <q-table
         :rows="products"
         :columns="columnsProduct"
@@ -96,30 +82,23 @@ export default defineComponent({
     DialogProductDetails
   },
   setup () {
-    const { listPublic, brand } = useApi()
+    const { list, brand } = useApi()
     const { notifyError } = useNotify()
     const products = ref([])
     const loading = ref(true)
-    const table = 'product'
     const route = useRoute()
     const filter = ref('')
     const showDialogDetails = ref(false)
     const productDetails = ref({})
-    const optionsCategories = ref([])
-    const categoryId = ref('')
 
     const handleListProducts = async (userId) => {
       try {
         loading.value = true
-        products.value = categoryId.value ? await listPublic(table, userId, 'category_id', categoryId.value) : await listPublic(table, userId)
+        products.value = await list('users', userId, 'products')
         loading.value = false
       } catch (error) {
         notifyError(error.message)
       }
-    }
-
-    const handleListCategories = async (userId) => {
-      optionsCategories.value = await listPublic('category', userId)
     }
 
     const handleShowDetails = (product) => {
@@ -129,7 +108,6 @@ export default defineComponent({
 
     onMounted(() => {
       if (route.params.id) {
-        handleListCategories(route.params.id)
         handleListProducts(route.params.id)
       }
     })
@@ -149,8 +127,6 @@ export default defineComponent({
       handleShowDetails,
       brand,
       handleListProducts,
-      optionsCategories,
-      categoryId,
       route,
       initialPagination,
       handleScrollToTop,

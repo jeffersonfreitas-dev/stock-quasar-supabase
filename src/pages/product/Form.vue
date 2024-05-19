@@ -32,7 +32,7 @@
           prefix="R$"
         />
         <q-select
-          v-model="form.category_id"
+          v-model="categorySelected"
           :options="optionsCategory"
           :label="$t('entity_category')"
           option-value="id"
@@ -65,6 +65,7 @@ import { useRouter, useRoute } from 'vue-router'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import useAuthUser from 'src/composables/UseAuthUser'
+import { v4 as uuidv4 } from 'uuid'
 
 export default defineComponent({
   name: 'PageFormProduct',
@@ -72,10 +73,11 @@ export default defineComponent({
     const table = 'product'
     const router = useRouter()
     const route = useRoute()
-    const { create, getById, update, listPublic, uploadImg } = useApi()
+    const { create, getById, update, list, uploadImg } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const { user } = useAuthUser()
     let product = {}
+    const categorySelected = ref()
     const optionsCategory = ref([])
     const img = ref([])
     const form = ref({
@@ -84,7 +86,7 @@ export default defineComponent({
       amount: 0,
       price: 0,
       category_id: '',
-      img_url: ''
+      img_uuid: ''
     })
 
     const isUpdate = computed(() => route.params.id)
@@ -99,15 +101,18 @@ export default defineComponent({
       form.value.price = form.value.price.replace(',', '.')
       try {
         if (img.value.length > 0) {
-          console.log(img.value)
-          const imgUrl = await uploadImg(img.value[0], 'product')
-          form.value.img_url = imgUrl
+          const imgUUID = uuidv4()
+          const url = await uploadImg(img.value[0], user.value.uuid, imgUUID)
+          form.value.img_uuid = imgUUID
+          form.value.img_url = url
         }
         if (isUpdate.value) {
           await update(table, { ...form.value })
           notifySuccess(`${form.value.name} atualizado com sucesso`)
         } else {
-          await create(table, form.value)
+          form.value.uuid = uuidv4()
+          form.value.category_id = categorySelected.value.uuid
+          await create('users', user.value.uuid, form.value, 'products')
           notifySuccess(`${form.value.name} salvo com sucesso`)
         }
         router.push({ name: 'product' })
@@ -117,7 +122,11 @@ export default defineComponent({
     }
 
     const handleListCategory = async () => {
-      optionsCategory.value = await listPublic('category', user.value.id)
+      try {
+        optionsCategory.value = await list('users', user.value.uuid, 'categories')
+      } catch (error) {
+        notifyError(error.message)
+      }
     }
 
     const handleGetProduct = async (id) => {
@@ -133,6 +142,7 @@ export default defineComponent({
       form,
       handleSubmit,
       isUpdate,
+      categorySelected,
       optionsCategory,
       img
     }
