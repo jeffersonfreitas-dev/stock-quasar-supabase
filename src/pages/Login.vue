@@ -1,7 +1,10 @@
 <template>
   <q-page padding>
+    <div class="row justify-center">
+      <h3>StockSet</h3>
+    </div>
     <div class="row justify-center q-mb-lg">
-      <img src="../../public/icons/apple-icon-120x120.png" class="q-mt-lg q-mb-lg" alt="logo"/>
+      <p class ="grey-7" >Seu local para divulgação e vendas dos seus produtos</p>
     </div>
     <q-form class="row justify-center align-items-center" @submit.prevent="handleLogin">
       <div class="col-md-4 col-sn-6 col-xs-10 q-gutter-y-md">
@@ -58,6 +61,7 @@
 
 <script>
 import { defineComponent, ref, onMounted } from 'vue'
+import { useQuasar } from 'quasar'
 import useAuthUser from 'src/composables/UseAuthUser'
 import { useRouter } from 'vue-router'
 import useNotify from 'src/composables/UseNotify'
@@ -65,9 +69,10 @@ import useNotify from 'src/composables/UseNotify'
 export default defineComponent({
   name: 'PageLogin',
   setup () {
+    const $q = useQuasar()
     const router = useRouter()
     const { isLoggedIn, login } = useAuthUser()
-    const { notifyError, notifySuccess } = useNotify()
+    const { notifyError } = useNotify()
     const isPwd = ref(true)
 
     const form = ref({
@@ -83,10 +88,14 @@ export default defineComponent({
 
     const handleLogin = async () => {
       try {
+        $q.loading.show({
+          message: 'Realizando o login...'
+        })
         await login(form.value)
-        notifySuccess('Seja bem vindo(a)!')
+        $q.loading.hide()
         router.push({ name: 'me' })
       } catch (error) {
+        $q.loading.hide()
         notifyError(error.message)
       }
     }
