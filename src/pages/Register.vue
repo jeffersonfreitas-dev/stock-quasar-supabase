@@ -1,5 +1,8 @@
 <template>
   <q-page padding>
+    <div class="row justify-center">
+      <h3>StockSet</h3>
+    </div>
     <q-form class="row justify-center q-mt-lg" @submit.prevent="handleRegister">
       <h3 class="col-12 text-h5 text-center">{{ $t('btn_register') }}</h3>
       <div class="col-md-8 col-sm-8 col-xs-10 q-gutter-y-md">

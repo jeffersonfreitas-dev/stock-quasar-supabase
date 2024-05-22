@@ -32,10 +32,13 @@
 
         <q-input
           filled
+          mask="#.##"
+          fill-mask="0"
+          reverse-fill-mask
           :label="$t('entity_price')"
           v-model="form.price"
           :rules="[val => !!val || $t('entity_price')]"
-          prefix="R$"
+          :prefix="$t('entity_currency_type')"
         />
 
         <q-select
@@ -99,7 +102,7 @@ export default defineComponent({
       name: '',
       description: '',
       amount: 0,
-      price: 0,
+      price: 0.0,
       category_id: '',
       img_uuid: '',
       img_url: ''
@@ -114,7 +117,6 @@ export default defineComponent({
     })
 
     const handleSubmit = async () => {
-      form.value.price = form.value.price.replace(',', '.')
       try {
         if (img.value.length > 0) {
           $q.loading.show({
@@ -135,6 +137,13 @@ export default defineComponent({
           $q.loading.show({
             message: 'Salvando o registro...'
           })
+
+          const produtos = await list('users', user.value.uuid, 'products')
+
+          if (produtos.length >= 20) {
+            throw new Error('O limite de inclusão de novos produtos foi atingido')
+          }
+
           form.value.uuid = uuidv4()
           form.value.category_id = categorySelected.value.uuid
           await create('users', user.value.uuid, form.value, 'products')

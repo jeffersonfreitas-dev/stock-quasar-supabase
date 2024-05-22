@@ -12,6 +12,7 @@ export default {
   entity_description: 'Description',
   entity_amount: 'Amount',
   entity_price: 'Price',
+  entity_currency_type: '$',
   entity_category: 'Category',
   entity_email: 'Email',
   entity_password: 'Password',

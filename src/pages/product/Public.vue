@@ -1,5 +1,9 @@
 <template>
   <q-page padding>
+    <div class="row justify-center">
+      <h3 v-if="configure.company">{{ configure.company }}</h3>
+      <h3 v-else>StockSet</h3>
+    </div>
     <div class="row">
       <q-table
         :rows="products"
@@ -7,17 +11,16 @@
         row-key="id"
         v-model:pagination="initialPagination"
         class="col-12"
-        :loading="loading"
         :filter="filter"
         hide-pagination
         grid
       >
       <template v-slot:top>
           <span class="text-h6">
-            {{ $t('product') }}
+            Lista de Produtos
           </span>
           <q-space />
-          <q-input outlined dense debounce="300" v-model="filter" placeholder="Procurar" class="q-mr-sm">
+          <q-input outlined dense debounce="300" v-model="filter" placeholder="Procurar por nome" class="q-mr-sm">
             <template v-slot:append>
               <q-icon name="mdi-magnify" />
             </template>
@@ -31,27 +34,20 @@
           >
             <div class="q-pa-xs col-xs-12 col-sm-6 col-md-3" key="card">
               <q-card class="cursor-pointer" v-ripple:primary @click="handleShowDetails(props.row)">
-                <q-img :src="props.row.img_url" :ratio="4/3" />
+                <q-img v-if="props.row.img_url" :src="props.row.img_url" :ratio="4/3" />
+                <q-img v-else src="/no-product.png" :ratio="4/3" />
                 <q-card-section class="text-center">
                   <div class="text-h6">{{ props.row.name }}</div>
-                  <div class="text-subtitle2">{{ formatCurrency(props.row.price) }}</div>
+                  <div class="text-subtitle2">{{ formatCurrency(parseFloat(props.row.price)) }}</div>
                 </q-card-section>
               </q-card>
-            </div>
-            <div class="col-12" v-if="props.rowIndex === 3 && brand.img_paralax" key="paralax">
-              <q-parallax :height="200" :speed="0.5">
-                <template v-slot:media>
-                  <img :src="brand.img_paralax">
-                </template>
-
-                <h3 class="text-white">{{ brand.name }}</h3>
-              </q-parallax>
             </div>
           </transition-group>
         </template>
       </q-table>
     </div>
-    <div class="row justify-center">
+
+    <div class="row justify-center q-mt-lg" v-if="products.length > initialPagination.rowsPerPage">
       <q-pagination
         v-model="initialPagination.page"
         :max="pagesNumber"
@@ -59,9 +55,11 @@
         @update:model-value="handleScrollToTop"
       />
     </div>
+
     <dialog-product-details
       :show="showDialogDetails"
       :product="productDetails"
+      :config="configure"
       @hide-dialog="showDialogDetails = false"
     />
   </q-page>
@@ -75,6 +73,7 @@ import { columnsProduct, initialPagination } from './table'
 import { useRoute } from 'vue-router'
 import { formatCurrency } from 'src/utils/format'
 import DialogProductDetails from 'src/components/DialogProductDetails.vue'
+import { useQuasar } from 'quasar'
 
 export default defineComponent({
   name: 'PageProductPublic',
@@ -82,21 +81,27 @@ export default defineComponent({
     DialogProductDetails
   },
   setup () {
-    const { list, brand } = useApi()
+    const { list } = useApi()
     const { notifyError } = useNotify()
     const products = ref([])
-    const loading = ref(true)
     const route = useRoute()
     const filter = ref('')
     const showDialogDetails = ref(false)
     const productDetails = ref({})
+    const $q = useQuasar()
+    const configure = ref({})
 
     const handleListProducts = async (userId) => {
       try {
-        loading.value = true
+        $q.loading.show({
+          message: 'Aguarde, buscando produtos no banco de dados...'
+        })
         products.value = await list('users', userId, 'products')
-        loading.value = false
+        const config = await list('users', userId, 'config')
+        configure.value = config.length > 0 ? config[0] : {}
+        $q.loading.hide()
       } catch (error) {
+        $q.loading.hide()
         notifyError(error.message)
       }
     }
@@ -119,13 +124,12 @@ export default defineComponent({
     return {
       columnsProduct,
       products,
-      loading,
       formatCurrency,
       filter,
       showDialogDetails,
       productDetails,
       handleShowDetails,
-      brand,
+      configure,
       handleListProducts,
       route,
       initialPagination,

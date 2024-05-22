@@ -1,7 +1,11 @@
+import { Quasar } from 'quasar'
+
 const formatCurrency = (currency) => {
-  const formatted = currency.toLocaleString('pt-br', {
+  const locale = Quasar.lang.getLocale()
+  const currencytype = locale === 'pt-BR' ? 'BRL' : 'USD'
+  const formatted = currency.toLocaleString(locale, {
     style: 'currency',
-    currency: 'BRL'
+    currency: currencytype
   })
   return formatted
 }

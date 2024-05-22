@@ -1,7 +1,12 @@
 <template>
   <q-page padding>
+    <div class="row justify-center">
+      <h3>StockSet</h3>
+    </div>
+    <div class="row justify-center q-mb-lg">
+      <p class ="grey-7" >Informe o e-mail cadastrado para receber o link de recuperação de senha</p>
+    </div>
     <q-form class="row justify-center q-mt-lg" @submit.prevent="handleForgotPassword">
-      <h3 class="col-12 text-h5 text-center">{{ $t('reset_password') }}</h3>
       <div class="col-md-8 col-sm-8 col-xs-10 q-gutter-y-md">
         <q-input label="Email" filled v-model="email" lazy-rules :rules="[val => (val && val.length > 0) || $t('required')]" type="email"/>
 
