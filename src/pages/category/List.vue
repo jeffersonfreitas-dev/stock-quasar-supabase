@@ -70,7 +70,7 @@ import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import { useQuasar } from 'quasar'
 import { columnsCategory, initialPagination } from './table'
-import useAuthUser from 'src/composables/UseAuthUser'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'PageCategoryList',
@@ -79,15 +79,15 @@ export default defineComponent({
     const { notifyError, notifySuccess } = useNotify()
     const router = useRouter()
     const $q = useQuasar()
-    const { user } = useAuthUser()
     const categories = ref([])
+    const store = useStore()
 
     const handleListCategories = async () => {
       try {
         $q.loading.show({
           message: 'Buscando os registros no banco de dados...'
         })
-        categories.value = await list('users', user.value.uuid, 'categories')
+        categories.value = await list('users', store.getters.user.uuid, 'categories')
         $q.loading.hide()
       } catch (error) {
         $q.loading.hide()
@@ -107,7 +107,7 @@ export default defineComponent({
             message: 'Verificando se o registro está sendo usado...'
           })
 
-          const produtos = await list('users', user.value.uuid, 'products')
+          const produtos = await list('users', store.getters.user.uuid, 'products')
           const exists = produtos.filter(prod => {
             return prod.category_id === category.uuid
           })
@@ -119,7 +119,7 @@ export default defineComponent({
             $q.loading.show({
               message: 'Realizando a exclusão do registro...'
             })
-            await remove('users', user.value.uuid, 'categories', category.uuid)
+            await remove('users', store.getters.user.uuid, 'categories', category.uuid)
             notifySuccess(`${category.name} removido com sucesso!`)
             handleListCategories()
             $q.loading.hide()

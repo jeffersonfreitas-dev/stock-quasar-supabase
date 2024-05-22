@@ -80,9 +80,9 @@ import { defineComponent, ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
-import useAuthUser from 'src/composables/UseAuthUser'
 import { v4 as uuidv4 } from 'uuid'
 import { useQuasar } from 'quasar'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'PageFormProduct',
@@ -92,7 +92,7 @@ export default defineComponent({
     const route = useRoute()
     const { create, getById, update, list, uploadImg } = useApi()
     const { notifyError, notifySuccess } = useNotify()
-    const { user } = useAuthUser()
+    const store = useStore()
     let product = {}
     const $q = useQuasar()
     const categorySelected = ref()
@@ -123,7 +123,7 @@ export default defineComponent({
             message: 'Realizando o upload da imagem do produto...'
           })
           const imgUUID = uuidv4()
-          const url = await uploadImg(img.value[0], user.value.uuid, imgUUID)
+          const url = await uploadImg(img.value[0], store.getters.user.uuid, imgUUID)
           form.value.img_uuid = imgUUID
           form.value.img_url = url
         }
@@ -138,7 +138,7 @@ export default defineComponent({
             message: 'Salvando o registro...'
           })
 
-          const produtos = await list('users', user.value.uuid, 'products')
+          const produtos = await list('users', store.getters.user.uuid, 'products')
 
           if (produtos.length >= 20) {
             throw new Error('O limite de inclusão de novos produtos foi atingido')
@@ -146,7 +146,7 @@ export default defineComponent({
 
           form.value.uuid = uuidv4()
           form.value.category_id = categorySelected.value.uuid
-          await create('users', user.value.uuid, form.value, 'products')
+          await create('users', store.getters.user.uuid, form.value, 'products')
           notifySuccess(`${form.value.name} salvo com sucesso`)
         }
         $q.loading.hide()
@@ -162,7 +162,7 @@ export default defineComponent({
         $q.loading.show({
           message: 'Verificando as informações no banco de dados...'
         })
-        optionsCategory.value = await list('users', user.value.uuid, 'categories')
+        optionsCategory.value = await list('users', store.getters.user.uuid, 'categories')
         $q.loading.hide()
       } catch (error) {
         $q.loading.hide()

@@ -1,5 +1,9 @@
 import { ref } from 'vue'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail } from 'firebase/auth'
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification,
+  sendPasswordResetEmail, GoogleAuthProvider, signOut,
+  signInWithPopup
+} from 'firebase/auth'
 import useApi from 'src/composables/UseApi'
 
 const user = ref(null)
@@ -8,9 +12,36 @@ export default function useAuthUser () {
   const auth = getAuth()
   const { create, getById } = useApi()
 
-  const login = async ({ email, password }) => {
+  const loginSocial = async () => {
     try {
-      const userCredentials = await signInWithEmailAndPassword(auth, email, password)
+      const provider = new GoogleAuthProvider()
+      const result = await signInWithPopup(auth, provider)
+      const user = result.user
+      const userExists = await getById('users', user.uid)
+
+      if (!userExists) {
+        await create('users', user.uid, { name: user.displayName, email: user.email })
+        const newUser = {
+          name: user.displayName,
+          email: user.email,
+          uuid: user.uid
+        }
+        user.value = newUser
+      } else {
+        userExists.uuid = user.uid
+        user.value = userExists
+      }
+      return user.value
+    } catch (error) {
+      const errorCode = error.code
+      const errorMessage = error.message
+      throw new Error(`Erro ${errorCode} com a causa ${errorMessage}`)
+    }
+  }
+
+  const login = async (form) => {
+    try {
+      const userCredentials = await signInWithEmailAndPassword(auth, form.email, form.password)
       const userLogged = userCredentials.user
 
       // if (!userLogged.emailVerified) {
@@ -19,6 +50,7 @@ export default function useAuthUser () {
       const userDb = await getById('users', userLogged.uid)
       user.value = userDb
       user.value.uuid = userLogged.uid
+      return user.value
     } catch (error) {
       let message = 'Ocorreu um erro durante o login. '
       switch (error.code) {
@@ -42,11 +74,16 @@ export default function useAuthUser () {
   }
 
   const logout = async () => {
-    user.value.vaue = null
+    try {
+      user.value.vaue = null
+      await signOut(auth)
+    } catch (error) {
+      throw new Error(error.message)
+    }
   }
 
   const isLoggedIn = () => {
-    return !!user.value
+    return user.value
   }
 
   const register = async ({ email, password, name }) => {
@@ -58,7 +95,6 @@ export default function useAuthUser () {
       await create('users', userCredentials.user.uid, newUser)
       await sendEmailVerification(auth.currentUser)
     } catch (error) {
-      console.log(error.code)
       let message = 'Ocorreu um erro durante o cadastro. '
       switch (error.code) {
         case 'auth/uid-already-exists':
@@ -97,6 +133,7 @@ export default function useAuthUser () {
   return {
     user,
     login,
+    loginSocial,
     logout,
     isLoggedIn,
     register,

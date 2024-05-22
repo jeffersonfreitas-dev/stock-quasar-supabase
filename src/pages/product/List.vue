@@ -11,14 +11,6 @@
       >
         <template v-slot:top>
           <span class="text-h6">{{ $t('product') }}</span>
-          <!-- <q-btn
-            align="around"
-            class="btn-fixed-width q-py-md q-mr-lg"
-            :label="$t('copy_link')"
-            icon="mdi-content-copy"
-            color="primary"
-            @click="handleCopyPublicLink"
-          /> -->
           <q-space />
           <q-btn
             align="around"
@@ -83,7 +75,7 @@ import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import { useQuasar } from 'quasar'
 import { columnsProduct, initialPagination } from './table'
-import useAuthUser from 'src/composables/UseAuthUser'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'PageProductList',
@@ -93,14 +85,14 @@ export default defineComponent({
     const router = useRouter()
     const products = ref([])
     const $q = useQuasar()
-    const { user } = useAuthUser()
+    const store = useStore()
 
     const handleListProducts = async () => {
       try {
         $q.loading.show({
           message: 'Buscando os registros no banco de dados...'
         })
-        products.value = await list('users', user.value.uuid, 'products')
+        products.value = await list('users', store.getters.user.uuid, 'products')
         $q.loading.hide()
       } catch (error) {
         $q.loading.hide()
@@ -109,21 +101,9 @@ export default defineComponent({
     }
 
     const handleGoToStore = () => {
-      const idUser = user.value.uuid
+      const idUser = store.getters.user.uuid
       router.push({ name: 'product-public', params: { id: idUser } })
     }
-
-    // const handleCopyPublicLink = () => {
-    //   const idUser = user.value.uuid
-    //   const link = router.resolve({ name: 'product-public', params: { id: idUser } })
-    //   const externalLink = window.origin + link.href
-    //   copyToClipboard(externalLink)
-    //     .then(() => {
-    //       notifySuccess('Link copidado com sucesso')
-    //     }).catch((error) => {
-    //       notifyError(error.message)
-    //     })
-    // }
 
     const handleRemove = async (product) => {
       try {
@@ -137,13 +117,13 @@ export default defineComponent({
             message: 'Realizando a exclusão do registro...'
           })
 
-          await remove('users', user.value.uuid, 'products', product.uuid)
+          await remove('users', store.getters.user.uuid, 'products', product.uuid)
 
           if (product.img_uuid) {
             $q.loading.show({
               message: 'Realizando a exclusão da imagem do produto...'
             })
-            removeImage(user.value.uuid, product.img_uuid)
+            removeImage(store.getters.user.uuid, product.img_uuid)
           }
           $q.loading.hide()
           notifySuccess(`${product.name} deletado com sucesso`)
@@ -173,7 +153,6 @@ export default defineComponent({
       handleEdit,
       handleRemove,
       handleGoToStore,
-      // handleCopyPublicLink,
       initialPagination,
       handleScrollToTop,
       pagesNumber: computed(() => Math.ceil(products.value.length / initialPagination.value.rowsPerPage))

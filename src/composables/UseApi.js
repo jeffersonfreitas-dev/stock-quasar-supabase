@@ -2,11 +2,6 @@ import { ref as vueRef } from 'vue'
 import { doc, getDoc, collection, getDocs, setDoc, deleteDoc, updateDoc } from 'firebase/firestore'
 import { uploadBytes, ref, getDownloadURL, deleteObject } from 'firebase/storage'
 import { db, storage } from 'src/boot/firebase'
-// import useAuthUser from './UseAuthUser'
-// import { v4 as uuidv4 } from 'uuid'
-// import { useRoute } from 'vue-router'
-// import useBrand from 'src/composables/UseBrand'
-// import { useQuasar } from 'quasar'
 
 const brand = vueRef({
   uuid: '',
@@ -18,11 +13,6 @@ const brand = vueRef({
 })
 
 export default function () {
-  // const { user: uuu } = useAuthUser()
-  // const route = useRoute()
-  // const { setBrand } = useBrand()
-  // const $q = useQuasar()
-
   const list = async (table, uuid, chield) => {
     try {
       const result = []
@@ -44,7 +34,6 @@ export default function () {
     try {
       let docSnap = null
       if (secondaryCollection) {
-        console.log(`/${primaryCollection}/${primaryUUID}/${secondaryCollection}/${secondaryUUID}`)
         docSnap = await getDoc(doc(db, primaryCollection, primaryUUID, secondaryCollection, secondaryUUID))
       } else {
         docSnap = await getDoc(doc(db, primaryCollection, primaryUUID))
@@ -97,12 +86,6 @@ export default function () {
     }
   }
 
-  const listPublic = async (table, userId, columnFilter = '', filter = '') => {
-    // const { data, error } = await supabase.from(table).select('*').eq('user_id', userId).eq(columnFilter, filter)
-    // if (error) throw error
-    // return data
-  }
-
   const uploadImg = async (file, uuid, imgUUID) => {
     const path = `${uuid}/${imgUUID}`
     try {
@@ -127,22 +110,14 @@ export default function () {
     }
   }
 
-  const getUrlPublic = async (fileName, storage) => {
-    // const { publicURL, error } = supabase.storage.from(storage).getPublicUrl(fileName)
-    // if (error) throw error
-    // return publicURL
-  }
-
   return {
     list,
-    listPublic,
     getById,
     create,
     update,
     remove,
     uploadImg,
     removeImage,
-    brand,
-    getUrlPublic
+    brand
   }
 }

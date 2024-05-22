@@ -12,14 +12,14 @@
         />
 
         <q-toolbar-title>
-          StockSet
+          {{ name }}
         </q-toolbar-title>
 
         <q-btn-dropdown flat color="white" icon="person">
           <q-list>
             <q-item clickable v-close-popup @click="handleLogout">
               <q-item-section>
-                <q-item-label>Sair</q-item-label>
+                <q-item-label>Logout</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -54,13 +54,13 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onBeforeMount } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
-import useAuthUser from 'src/composables/UseAuthUser'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import useApi from 'src/composables/UseApi'
 import useBrand from 'src/composables/UseBrand'
+import { useStore } from 'vuex'
 
 const linksList = [
   {
@@ -99,23 +99,30 @@ export default defineComponent({
   setup () {
     const leftDrawerOpen = ref(false)
     const router = useRouter()
-    const { logout, user } = useAuthUser()
     const $q = useQuasar()
     const { list } = useApi()
     const { setBrand } = useBrand()
+    const store = useStore()
+    const brandDefault = ref({
+      primary: '#2c9c6a',
+      secondary: '#26A69A'
+    })
+    const name = ref('StockSet')
 
-    onMounted(async () => {
-      const config = await list('users', user.value.uuid, 'config')
+    onBeforeMount(async () => {
+      const config = await list('users', store.getters.user.uuid, 'config')
       if (config.length > 0) {
-        console.log(config[0])
         setBrand(config[0].primary, config[0].secondary)
+        name.value = config[0].company
+      } else {
+        setBrand(brandDefault.value.primary, brandDefault.value.secondary)
       }
     })
 
     const handleLogout = async () => {
       $q.dialog({ title: 'Sair', message: 'Deseja realmente sair?', cancel: true, persistent: true })
         .onOk(async () => {
-          await logout()
+          store.dispatch('logout')
           router.replace({ name: 'login' })
         })
     }
@@ -126,7 +133,8 @@ export default defineComponent({
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
       },
-      handleLogout
+      handleLogout,
+      name
     }
   }
 })

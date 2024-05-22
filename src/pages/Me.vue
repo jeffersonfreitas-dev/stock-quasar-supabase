@@ -7,26 +7,20 @@
 </template>
 
 <script>
-import { defineComponent, onMounted } from 'vue'
-import useAuthUser from 'src/composables/UseAuthUser'
+import { defineComponent, onMounted, ref } from 'vue'
 import { createI18n } from 'vue-i18n'
-import useBrand from 'src/composables/UseBrand'
-import useApi from 'src/composables/UseApi'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'PageMe',
   setup () {
-    const { user } = useAuthUser()
-    const { list } = useApi()
     const i18n = createI18n({ legacy: false })
     const { locale } = i18n
-    const { setBrand } = useBrand()
+    const store = useStore()
+    const user = ref(null)
 
     onMounted(async () => {
-      const config = await list('users', user.value.uuid, 'config')
-      if (config.length > 0) {
-        setBrand(config.primary, config.secondary)
-      }
+      user.value = store.getters.user
     })
 
     return {

@@ -25,35 +25,45 @@
           </template>
         </q-input>
 
-        <div class=" row justify-center">
-          <q-btn align="around"
-          class="btn-fixed-width q-py-md"
-          icon="login"
-          color="primary"
-          :label="$t('btn_login')"
-          type="submit"/>
-        </div>
-
-        <div class=" row justify-center q-mt-lg">
-          <q-btn
-              :label="$t('btn_register')"
-              color="primary"
-              class="full-width"
-              size="md"
-              flat to="/register"
-            />
-        </div>
-
-        <div class=" row justify-center">
-          <q-btn
-            :label="$t('btn_forgot_password')"
+        <div class="row justify-end q-mb-lg">
+          <div class=" row justify-center q-mr-md">
+            <q-btn align="around"
+            class="btn-fixed-width q-py-md"
+            icon="login"
             color="primary"
-            class="full-width"
+            :label="$t('btn_login')"
+            type="submit"/>
+          </div>
+
+          <div class=" row justify-center">
+            <q-btn align="around"
+            class="btn-fixed-width q-py-md"
+            icon="person_add"
+            color="primary"
+            to="/register" />
+          </div>
+
+          <div class=" row justify-center q-ml-md">
+            <q-btn align="around"
+            class="btn-fixed-width q-py-md"
+            icon="lock_reset"
+            color="primary"
+            :to="{ name: 'forgot-password' }" />
+          </div>
+        </div>
+
+        <div class=" row justify-center q-mt-xl">
+          <q-btn
+            label="Continue com Google"
+            color="primary"
+            icon="fab fa-google"
             size="md"
-            flat
-            :to="{ name: 'forgot-password' }"
+            class="q-py-md"
+            outline
+            @click="socialLogin()"
           />
         </div>
+
       </div>
     </q-form>
   </q-page>
@@ -62,16 +72,16 @@
 <script>
 import { defineComponent, ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
-import useAuthUser from 'src/composables/UseAuthUser'
 import { useRouter } from 'vue-router'
 import useNotify from 'src/composables/UseNotify'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'PageLogin',
   setup () {
     const $q = useQuasar()
     const router = useRouter()
-    const { isLoggedIn, login } = useAuthUser()
+    const store = useStore()
     const { notifyError } = useNotify()
     const isPwd = ref(true)
 
@@ -81,7 +91,7 @@ export default defineComponent({
     })
 
     onMounted(() => {
-      if (!isLoggedIn) {
+      if (store.getters.isAuthenticated) {
         router.push({ name: 'me' })
       }
     })
@@ -91,17 +101,31 @@ export default defineComponent({
         $q.loading.show({
           message: 'Realizando o login...'
         })
-        await login(form.value)
+        await store.dispatch('login', form.value)
         $q.loading.hide()
-        router.push({ name: 'me' })
+        if (store.getters.user) {
+          router.push({ name: 'me' })
+        }
       } catch (error) {
         $q.loading.hide()
+        notifyError(error.message)
+      }
+    }
+
+    const socialLogin = async () => {
+      try {
+        await store.dispatch('loginSocial', form.value)
+        if (store.getters.user) {
+          router.push({ name: 'me' })
+        }
+      } catch (error) {
         notifyError(error.message)
       }
     }
     return {
       form,
       isPwd,
+      socialLogin,
       handleLogin
     }
   }

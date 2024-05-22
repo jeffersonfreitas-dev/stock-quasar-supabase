@@ -4,6 +4,17 @@
       <h3 v-if="configure.company">{{ configure.company }}</h3>
       <h3 v-else>StockSet</h3>
     </div>
+    <div class="row justify-center q-mb-lg">
+      <div class=" row justify-center">
+            <q-btn align="around"
+            class="btn-fixed-width"
+            :label="$t('copy_link')"
+            icon="share"
+            color="primary"
+            outline
+            @click="handleCopyPublicLink" />
+          </div>
+    </div>
     <div class="row">
       <q-table
         :rows="products"
@@ -70,10 +81,10 @@ import { defineComponent, ref, onMounted, computed } from 'vue'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import { columnsProduct, initialPagination } from './table'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { formatCurrency } from 'src/utils/format'
 import DialogProductDetails from 'src/components/DialogProductDetails.vue'
-import { useQuasar } from 'quasar'
+import { copyToClipboard, useQuasar } from 'quasar'
 
 export default defineComponent({
   name: 'PageProductPublic',
@@ -82,7 +93,7 @@ export default defineComponent({
   },
   setup () {
     const { list } = useApi()
-    const { notifyError } = useNotify()
+    const { notifyError, notifySuccess } = useNotify()
     const products = ref([])
     const route = useRoute()
     const filter = ref('')
@@ -90,6 +101,8 @@ export default defineComponent({
     const productDetails = ref({})
     const $q = useQuasar()
     const configure = ref({})
+    const uuidUser = ref(null)
+    const router = useRouter()
 
     const handleListProducts = async (userId) => {
       try {
@@ -113,9 +126,21 @@ export default defineComponent({
 
     onMounted(() => {
       if (route.params.id) {
+        uuidUser.value = route.params.id
         handleListProducts(route.params.id)
       }
     })
+
+    const handleCopyPublicLink = () => {
+      const link = router.resolve({ name: 'product-public', params: { id: uuidUser.value } })
+      const externalLink = window.origin + link.href
+      copyToClipboard(externalLink)
+        .then(() => {
+          notifySuccess('Link copidado com sucesso')
+        }).catch((error) => {
+          notifyError(error.message)
+        })
+    }
 
     const handleScrollToTop = () => {
       window.scroll({ top: 0, behavior: 'smooth' })
@@ -132,6 +157,7 @@ export default defineComponent({
       configure,
       handleListProducts,
       route,
+      handleCopyPublicLink,
       initialPagination,
       handleScrollToTop,
       pagesNumber: computed(() => Math.ceil(products.value.length / initialPagination.value.rowsPerPage))

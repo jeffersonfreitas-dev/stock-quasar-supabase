@@ -55,9 +55,9 @@ import { useRouter } from 'vue-router'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
 import useBrand from 'src/composables/UseBrand'
-import useAuthUser from 'src/composables/UseAuthUser'
 import { v4 as uuidv4 } from 'uuid'
 import { useQuasar } from 'quasar'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'PageFormConfig',
@@ -66,8 +66,9 @@ export default defineComponent({
     const { setBrand } = useBrand()
     const { create, list, update, uploadImg } = useApi()
     const { notifyError, notifySuccess } = useNotify()
-    const { user } = useAuthUser()
     const $q = useQuasar()
+    const store = useStore()
+
     let config = {}
     const paralax = ref([])
     const form = ref({
@@ -91,7 +92,7 @@ export default defineComponent({
             message: 'Realizando o upload da imagem do paralax...'
           })
           const uuidImg = uuidv4()
-          const imgUrl = await uploadImg(paralax.value[0], user.value.uuid, uuidImg)
+          const imgUrl = await uploadImg(paralax.value[0], store.getters.user.uuid, uuidImg)
           form.value.img_paralax = imgUrl
           form.value.uuid_paralax = uuidImg
         }
@@ -99,7 +100,7 @@ export default defineComponent({
           $q.loading.show({
             message: 'Atualizando as configurações...'
           })
-          await update('users', user.value.uuid, 'config', form.value.uuid, form.value)
+          await update('users', store.getters.user.uuid, 'config', form.value.uuid, form.value)
           notifySuccess('Configurações atualizadas com sucesso')
         } else {
           $q.loading.show({
@@ -107,7 +108,7 @@ export default defineComponent({
           })
           const uuidConfig = uuidv4()
           form.value.uuid = uuidConfig
-          await create('users', user.value.uuid, form.value, 'config')
+          await create('users', store.getters.user.uuid, form.value, 'config')
           notifySuccess('Configurações salvas com sucesso')
         }
         setBrand(form.value.primary, form.value.secondary)
@@ -124,7 +125,7 @@ export default defineComponent({
         $q.loading.show({
           message: 'Verificando as informações no banco de dados...'
         })
-        config = await list('users', user.value.uuid, 'config')
+        config = await list('users', store.getters.user.uuid, 'config')
         if (config.length > 0) {
           form.value = config[0]
           console.log(form.value)

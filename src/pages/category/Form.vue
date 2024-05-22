@@ -42,9 +42,9 @@ import { defineComponent, ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import useApi from 'src/composables/UseApi'
 import useNotify from 'src/composables/UseNotify'
-import useAuthUser from 'src/composables/UseAuthUser'
 import { v4 as uuidv4 } from 'uuid'
 import { useQuasar } from 'quasar'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'PageFormCategory',
@@ -53,8 +53,8 @@ export default defineComponent({
     const route = useRoute()
     const { update, create, getById, list } = useApi()
     const { notifyError, notifySuccess } = useNotify()
-    const { user } = useAuthUser()
     const $q = useQuasar()
+    const store = useStore()
 
     const form = ref({
       name: ''
@@ -74,14 +74,14 @@ export default defineComponent({
           $q.loading.show({
             message: 'Atualizando o registro...'
           })
-          await update('users', user.value.uuid, 'categories', isUpdate.value, { ...form.value })
+          await update('users', store.getters.user.uuid, 'categories', isUpdate.value, { ...form.value })
           $q.loading.hide()
           notifySuccess(`${form.value.name} updated successfully`)
         } else {
           $q.loading.show({
             message: 'Salvando o registro...'
           })
-          const categorias = await list('users', user.value.uuid, 'categories')
+          const categorias = await list('users', store.getters.user.uuid, 'categories')
 
           if (categorias.length >= 5) {
             throw new Error('O limite de inclusão de novas categorias foi atingido')
@@ -90,10 +90,10 @@ export default defineComponent({
           const newCategory = {
             uuid: uuidv4(),
             name: form.value.name,
-            userId: user.value.uuid
+            userId: store.getters.user.uuid
           }
 
-          await create('users', user.value.uuid, newCategory, 'categories')
+          await create('users', store.getters.user.uuid, newCategory, 'categories')
           $q.loading.hide()
           notifySuccess(`${form.value.name} saved successfully`)
         }
@@ -109,7 +109,7 @@ export default defineComponent({
         $q.loading.show({
           message: 'Verificando as informações no banco de dados...'
         })
-        const category = await getById('users', user.value.uuid, 'categories', id)
+        const category = await getById('users', store.getters.user.uuid, 'categories', id)
         form.value = category
         $q.loading.hide()
       } catch (error) {
