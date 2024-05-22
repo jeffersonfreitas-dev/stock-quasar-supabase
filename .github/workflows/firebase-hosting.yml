@@ -21,7 +21,9 @@ jobs:
           sed -i "s/'FIREBASE_APPID'/'${{ secrets.FIREBASE_APPID }}'/" src/boot/firebase.js
 
       - name: Install dependencies
-        run: yarn
+        run: |
+          yarn
+          yarn add vuex
 
       - name: Atualizar browsers
         run: npx update-browserslist-db@latest
