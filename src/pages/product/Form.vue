@@ -87,10 +87,9 @@ import { useStore } from 'vuex'
 export default defineComponent({
   name: 'PageFormProduct',
   setup () {
-    const table = 'product'
     const router = useRouter()
     const route = useRoute()
-    const { create, getById, update, list, uploadImg } = useApi()
+    const { create, getById, update, list, uploadImg, removeImage } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const store = useStore()
     let product = {}
@@ -118,35 +117,53 @@ export default defineComponent({
 
     const handleSubmit = async () => {
       try {
-        if (img.value.length > 0) {
-          $q.loading.show({
-            message: 'Realizando o upload da imagem do produto...'
-          })
-          const imgUUID = uuidv4()
-          const url = await uploadImg(img.value[0], store.getters.user.uuid, imgUUID)
-          form.value.img_uuid = imgUUID
-          form.value.img_url = url
-        }
         if (isUpdate.value) {
+          if (img.value.length > 0) {
+            $q.loading.show({
+              message: 'Realizando o upload da imagem do produto...'
+            })
+            const uuidImg = form.value.img_uuid
+            const imgUUID = uuidv4()
+            const url = await uploadImg(img.value[0], store.getters.user.uuid, imgUUID)
+            form.value.img_uuid = imgUUID
+            form.value.img_url = url
+
+            if (uuidImg) {
+              $q.loading.show({ message: 'Removendo a imagem anterior...' })
+              await removeImage(store.getters.user.uuid, uuidImg)
+            }
+          }
           $q.loading.show({
             message: 'Atualizando o registro...'
           })
-          await update(table, { ...form.value })
+          await update('users', store.getters.user.uuid, 'products', isUpdate.value, { ...form.value })
+
           notifySuccess(`${form.value.name} atualizado com sucesso`)
         } else {
           $q.loading.show({
-            message: 'Salvando o registro...'
+            message: 'Verificando o limite de registros salvos...'
           })
-
           const produtos = await list('users', store.getters.user.uuid, 'products')
-
           if (produtos.length >= 20) {
             throw new Error('O limite de inclusão de novos produtos foi atingido')
           }
+          if (img.value.length > 0) {
+            $q.loading.show({
+              message: 'Realizando o upload da imagem do produto...'
+            })
+            const imgUUID = uuidv4()
+            const url = await uploadImg(img.value[0], store.getters.user.uuid, imgUUID)
+            form.value.img_uuid = imgUUID
+            form.value.img_url = url
+          }
 
+          $q.loading.show({
+            message: 'Salvando o registro...'
+          })
           form.value.uuid = uuidv4()
           form.value.category_id = categorySelected.value.uuid
           await create('users', store.getters.user.uuid, form.value, 'products')
+
           notifySuccess(`${form.value.name} salvo com sucesso`)
         }
         $q.loading.hide()
@@ -175,8 +192,9 @@ export default defineComponent({
         $q.loading.show({
           message: 'Verificando as informações no banco de dados...'
         })
-        product = await getById(table, id)
+        product = await getById('users', store.getters.user.uuid, 'products', id)
         form.value = product
+        categorySelected.value = await getById('users', store.getters.user.uuid, 'categories', product.category_id)
         $q.loading.hide()
       } catch (error) {
         $q.loading.hide()

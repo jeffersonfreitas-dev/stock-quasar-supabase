@@ -40,5 +40,9 @@ export default {
   login: 'Entrar',
   btn_register: 'Cadastre-se',
   btn_forgot_password: 'Recuperar a senha',
-  make_wish: 'Fazer pedido'
+  make_wish: 'Fazer pedido',
+  subtitle: 'Seu local para divulgação e vendas dos seus produtos',
+  cont_google: 'Continue com Google',
+  forgot_pass_subtitle: 'Informe o e-mail cadastrado para receber o link de recuperação de senha',
+  wellcome: 'Seja bem-vindo(a)'
 }

@@ -4,7 +4,7 @@
       <h3>StockSet</h3>
     </div>
     <div class="row justify-center q-mb-lg">
-      <p class ="grey-7" >Informe o e-mail cadastrado para receber o link de recuperação de senha</p>
+      <p class ="grey-7" >{{ $t('forgot_pass_subtitle') }}</p>
     </div>
     <q-form class="row justify-center q-mt-lg" @submit.prevent="handleForgotPassword">
       <div class="col-md-8 col-sm-8 col-xs-10 q-gutter-y-md">

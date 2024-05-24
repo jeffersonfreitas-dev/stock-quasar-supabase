@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <div v-if="user">
-      <p>Seja bem-vindo(a) {{ user.name }}</p>
+      <p>{{ $t('wellcome') }} {{ user.name }}</p>
     </div>
   </q-page>
 </template>

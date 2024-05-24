@@ -21,7 +21,7 @@
           :rules="[val => (val && val.length > 0) || $t('required')]"
           type="email"
         />
-        <q-input v-model="form.password" filled :type="isPwd ? 'password' : 'text'" label="Senha" :rules="[val => (val && val.length > 0) || $t('required')]">
+        <q-input v-model="form.password" filled :type="isPwd ? 'password' : 'text'" :label="$t('entity_password')" :rules="[val => (val && val.length > 0) || $t('required')]">
           <template v-slot:append>
             <q-icon
               :name="isPwd ? 'visibility_off' : 'visibility'"

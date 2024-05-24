@@ -40,5 +40,9 @@ export default {
   login: 'Login',
   btn_register: 'Register',
   btn_forgot_password: 'Forgot Password',
-  make_wish: 'Make a Wish'
+  make_wish: 'Make a Wish',
+  subtitle: 'Your place to promote and sell your products',
+  cont_google: 'Continue with Google',
+  forgot_pass_subtitle: 'Enter your registered email to receive the password recovery link',
+  wellcome: 'Welcome'
 }
