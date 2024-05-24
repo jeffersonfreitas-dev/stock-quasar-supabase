@@ -113,12 +113,17 @@ export default defineComponent({
     }
 
     const socialLogin = async () => {
+      $q.loading.show({
+        message: 'Realizando o login...'
+      })
       try {
         await store.dispatch('loginSocial', form.value)
         if (store.getters.user) {
           router.push({ name: 'me' })
         }
+        $q.loading.hide()
       } catch (error) {
+        $q.loading.hide()
         notifyError(error.message)
       }
     }
