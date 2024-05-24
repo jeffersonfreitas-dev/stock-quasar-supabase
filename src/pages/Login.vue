@@ -4,18 +4,18 @@
       <h3>StockSet</h3>
     </div>
     <div class="row justify-center q-mb-lg">
-      <p class ="grey-7" >Seu local para divulgação e vendas dos seus produtos</p>
+      <p class ="grey-7" >{{ $t('subtitle') }}</p>
     </div>
     <q-form class="row justify-center align-items-center" @submit.prevent="handleLogin">
       <div class="col-md-4 col-sn-6 col-xs-10 q-gutter-y-md">
 
-        <q-input v-model="form.email" filled type="email" :rules="[val => (val && val.length > 0) || $t('required')]" hint="E-mail">
+        <q-input v-model="form.email" filled type="email" :rules="[val => (val && val.length > 0) || $t('required')]" :hint="$t('entity_email')">
           <template v-slot:append>
             <q-icon name="mail" />
           </template>
         </q-input>
 
-        <q-input v-model="form.password" filled :type="isPwd ? 'password' : 'text'" hint="Senha" :rules="[val => (val && val.length > 0) || $t('required')]">
+        <q-input v-model="form.password" filled :type="isPwd ? 'password' : 'text'" :hint="$t('entity_password')" :rules="[val => (val && val.length > 0) || $t('required')]">
           <template v-slot:append>
             <q-icon
               :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -54,7 +54,7 @@
 
         <div class=" row justify-center q-mt-xl">
           <q-btn
-            label="Continue com Google"
+            :label="$t('cont_google')"
             color="primary"
             icon="fab fa-google"
             size="md"
