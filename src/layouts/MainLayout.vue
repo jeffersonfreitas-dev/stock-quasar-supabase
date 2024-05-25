@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr lFf" class="background-container">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -139,3 +139,14 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+.background-container {
+  background-image: url('/back.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  width: 100vw;
+}
+</style>

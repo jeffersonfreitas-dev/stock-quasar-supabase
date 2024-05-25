@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <q-page padding class="background-container">
     <div class="row justify-center">
       <h3>StockSet</h3>
     </div>
@@ -136,3 +136,14 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+.background-container {
+  background-image: url('/back.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  width: 100vw;
+}
+</style>
